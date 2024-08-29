@@ -114,6 +114,54 @@ app.get("/student/:id", (req, res) => {
 })
 
 
+app.put(`/student/update/:id`, (req, res) => {
+  const query = `
+    UPDATE students 
+    SET 
+      student_id_code = ?,
+      student_image_path = ?,
+      student_name = ?,
+      student_datebirth = ?,
+      student_address = ?,
+      student_gender = ?,
+      student_grade_level = ?,
+      student_program = ?,
+      student_block_section = ?,
+      student_parent_name = ?,
+      student_parent_number = ?,
+      student_parent_email = ?
+    WHERE student_id = ?
+  `;
+
+  const id = req.params.id;
+  const values = [
+    req.body.student_id_code,
+    req.body.student_image_path,
+    req.body.student_name,
+    req.body.student_datebirth,
+    req.body.student_address,
+    req.body.student_gender,
+    req.body.student_grade_level,
+    req.body.student_program,
+    req.body.student_block_section,
+    req.body.student_parent_name,
+    req.body.student_parent_number,
+    req.body.student_parent_email
+  ];
+
+  databaseConnection.query(query, [...values, id], (err, data) => {
+    if (err) return res.json(err);
+    return res.json({
+      ...data,
+      message: "Successfully updated student",
+      status: "success",
+
+    });
+  });
+});
+
+
+
 
 
 //register
@@ -133,6 +181,7 @@ app.post("/users", (req, res) => {
       return res.json({
       ...data,
       message: "succesfully added"
+     
       })
   })
 })

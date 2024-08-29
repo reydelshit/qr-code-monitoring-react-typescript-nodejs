@@ -34,6 +34,7 @@ const StudentManagement = () => {
     data: students,
     error,
     isLoading,
+    mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/student`, fetcher);
 
   console.log(students);
@@ -162,6 +163,7 @@ const StudentManagement = () => {
       {showEditForm && (
         <div className="absolute top-0 flex w-full max-w-[100%] items-center justify-center bg-white bg-opacity-80">
           <EditStudent
+            mutate={mutate}
             setShowEditForm={setShowEditForm}
             studentID={studentID}
           />

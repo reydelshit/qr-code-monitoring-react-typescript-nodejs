@@ -26,9 +26,11 @@ type ChangeEvent =
 export default function EditStudent({
   setShowEditForm,
   studentID,
+  mutate,
 }: {
   setShowEditForm: (value: boolean) => void;
   studentID: string;
+  mutate: () => void;
 }) {
   const [student, setStudent] = useState<Student>({} as Student);
   const { toast } = useToast();
@@ -64,27 +66,6 @@ export default function EditStudent({
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching data</div>;
 
-  // const student =
-  //   data && data.length > 0 ? setStudent(data[0] as Student) : ({} as Student);
-
-  // const fetchStudentData = () => {
-  //   axios
-  //     .get(`${import.meta.env.VITE_SERVER_LINK}/student.php`, {
-  //       params: {
-  //         student_id: studentID,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data, 'sss');
-  //       setStudent(res.data[0]);
-  //       setImage(res.data[0].student_image_path);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   fetchStudentData();
-  // }, []);
-
   const handleGender = (value: string) => {
     console.log(value);
     setSelectedGender(value);
@@ -106,21 +87,23 @@ export default function EditStudent({
     console.log(student);
 
     axios
-      .put(`${import.meta.env.VITE_SERVER_LINK}/student.php`, {
+      .put(`${import.meta.env.VITE_SERVER_LINK}/student/update/${studentID}`, {
         ...student,
         student_name: student.student_name,
         student_image_path: image,
         student_gender: student.student_gender || selectedGender,
       })
       .then((res) => {
-        console.log(res.data, 'updated');
+        console.log(res.data.message, 'message');
+        console.log(res.data.status, 'status');
 
         if (res.data.status === 'success') {
-          window.location.reload();
+          mutate();
+
           setShowEditForm(false);
           toast({
-            title: 'product: Added Successfully',
-            description: 'product has been added successfully',
+            title: 'student: Added Successfully',
+            description: 'student has been added successfully',
           });
         }
       });
@@ -328,7 +311,10 @@ export default function EditStudent({
 
           <div className="my-4 flex justify-end gap-4">
             <Button
-              onClick={() => setShowEditForm(false)}
+              onClick={() => {
+                mutate();
+                setShowEditForm(false);
+              }}
               className="w-[20%] self-center bg-[#585a57] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
             >
               Cancel
