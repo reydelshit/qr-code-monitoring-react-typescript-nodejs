@@ -1,9 +1,8 @@
-import Lgo from '@/assets/prod.jpg';
+import defaultProfile from '@/assets/profile.webp';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
-import defaultProfile from '@/assets/profile.webp';
 import useSWR from 'swr';
 
 import {
@@ -13,10 +12,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import QRCode from 'react-qr-code';
 import { Student } from '@/types/student';
+import axios from 'axios';
+import { useState } from 'react';
+import QRCode from 'react-qr-code';
 // import { URL } from 'url';
 
 type ChangeEvent =
@@ -38,6 +37,9 @@ export default function EditStudent({
   const [errorField, setErrorField] = useState('' as string);
   const [selectedGender, setSelectedGender] = useState('' as string);
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [errorImage, setErrorImage] = useState<string | null>(null);
+
   const fetcher = async (url: string): Promise<Student[]> => {
     const response = await fetch(url);
     if (!response.ok) {
@@ -46,7 +48,7 @@ export default function EditStudent({
     return response.json();
   };
 
-  const { data, error, isLoading } = useSWR(
+  const { error, isLoading } = useSWR(
     `${import.meta.env.VITE_SERVER_LINK}/student/${studentID}`,
     fetcher,
 
@@ -55,7 +57,10 @@ export default function EditStudent({
         setStudent(data && data.length > 0 ? data[0] : ({} as Student));
 
         if (data && data.length > 0) {
+          // console.log(data[0].student_image_path);
           setImage(data[0].student_image_path);
+          // const file = new File([], data[0].student_image_path);
+          // setImageFile(file);
         }
 
         console.log(data, 'data');
@@ -76,49 +81,84 @@ export default function EditStudent({
     const name = e.target.name;
     setStudent((values) => ({ ...values, [name]: value }));
   };
+
   const handleSubmitUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!image) {
+    if (!imageFile && !student.student_image_path) {
       setErrorField('Please fill in all fields');
       return;
     }
 
-    console.log(student);
+    const formData = new FormData();
+    formData.append(
+      'student_image_path',
+      imageFile || student.student_image_path,
+    );
+    formData.append('student_id_code', student.student_id_code);
+    formData.append('student_name', student.student_name);
+    formData.append('student_datebirth', student.student_datebirth);
+    formData.append('student_address', student.student_address);
+    formData.append('student_gender', student.student_gender || selectedGender);
+    formData.append('student_grade_level', student.student_grade_level);
+    formData.append('student_program', student.student_program);
+    formData.append('student_block_section', student.student_block_section);
+    formData.append('student_parent_name', student.student_parent_name);
+    formData.append('student_parent_number', student.student_parent_number);
+    formData.append('student_parent_email', student.student_parent_email);
 
     axios
-      .put(`${import.meta.env.VITE_SERVER_LINK}/student/update/${studentID}`, {
-        ...student,
-        student_name: student.student_name,
-        student_image_path: image,
-        student_gender: student.student_gender || selectedGender,
-      })
+      .put(
+        `${import.meta.env.VITE_SERVER_LINK}/student/update/${studentID}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      )
       .then((res) => {
-        console.log(res.data.message, 'message');
-        console.log(res.data.status, 'status');
-
+        console.log(res.data, 'res');
         if (res.data.status === 'success') {
           mutate();
-
           setShowEditForm(false);
           toast({
-            title: 'student: Added Successfully',
-            description: 'student has been added successfully',
+            title: 'Student Updated Successfully',
+            description: 'Student has been updated successfully',
           });
         }
+      })
+      .catch((err) => {
+        console.error('Upload error:', err);
+        setErrorField('Failed to update student');
       });
   };
 
-  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const data = new FileReader();
-    data.readAsDataURL(e.target.files![0]);
+  // const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const data = new FileReader();
+  //   data.readAsDataURL(e.target.files![0]);
 
-    data.onloadend = () => {
-      const base64 = data.result;
-      if (base64) {
-        setImage(base64.toString());
+  //   data.onloadend = () => {
+  //     const base64 = data.result;
+  //     if (base64) {
+  //       setImage(base64.toString());
+  //     }
+  //   };
+  // };
+
+  const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files ? event.target.files[0] : null;
+
+    if (selectedFile) {
+      if (selectedFile.type.startsWith('image/')) {
+        setImageFile(selectedFile);
+        setImage(URL.createObjectURL(selectedFile));
+        setErrorImage(null);
+      } else {
+        setErrorImage('Please select a valid image file.');
+        setImageFile(null);
       }
-    };
+    }
   };
 
   return (
@@ -136,7 +176,7 @@ export default function EditStudent({
               <img
                 className="mb-4 h-[20rem] w-full rounded-lg object-cover"
                 src={
-                  image!
+                  image
                     ? `${import.meta.env.VITE_SERVER_LINK}/${student.student_image_path}`
                     : defaultProfile
                 }

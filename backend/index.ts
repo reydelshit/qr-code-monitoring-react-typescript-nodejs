@@ -5,6 +5,8 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
 import mysql from 'mysql';
+import multer from 'multer';
+
 
 dotenv.config();
 const app: Express = express();
@@ -114,7 +116,19 @@ app.get("/student/:id", (req, res) => {
 })
 
 
-app.put(`/student/update/:id`, (req, res) => {
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '..', 'uploads')); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); 
+  }
+});
+
+
+const upload = multer({ storage });
+
+app.put(`/student/update/:id`, upload.single('student_image_path'), (req, res) => {
   const query = `
     UPDATE students 
     SET 
@@ -134,9 +148,13 @@ app.put(`/student/update/:id`, (req, res) => {
   `;
 
   const id = req.params.id;
+  const imagePath = req.file ? 
+    path.join('uploads', req.file.filename)
+  : req.body.student_image_path; 
+
   const values = [
     req.body.student_id_code,
-    req.body.student_image_path,
+    imagePath,
     req.body.student_name,
     req.body.student_datebirth,
     req.body.student_address,
@@ -149,16 +167,22 @@ app.put(`/student/update/:id`, (req, res) => {
     req.body.student_parent_email
   ];
 
+  console.log("SQL Query:", query);
+  console.log("Values:", [...values, id]);
+
   databaseConnection.query(query, [...values, id], (err, data) => {
-    if (err) return res.json(err);
+    if (err) {
+      console.error('SQL Error:', err);
+      return res.status(500).json({ error: 'Database query failed' });
+    }
     return res.json({
       ...data,
       message: "Successfully updated student",
       status: "success",
-
     });
   });
 });
+
 
 
 
