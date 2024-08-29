@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import defaultProfile from '@/assets/profile.webp';
+import useSWR from 'swr';
 
 import {
   Select,
@@ -15,30 +16,12 @@ import {
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
+import { Student } from '@/types/student';
 // import { URL } from 'url';
 
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>;
-
-interface Student {
-  student_id: string;
-  student_id_code: string;
-  student_image_path: string;
-  student_firstname: string;
-  student_lastname: string;
-  student_name: string;
-  student_middlename: string;
-  student_datebirth: string;
-  student_grade_level: string;
-  student_program: string;
-  student_block_section: string;
-  student_parent_name: string;
-  student_parent_number: string;
-  student_parent_email: string;
-  student_address: string;
-  student_gender: string;
-}
 
 export default function EditStudent({
   setShowEditForm,
@@ -50,26 +33,57 @@ export default function EditStudent({
   const [student, setStudent] = useState<Student>({} as Student);
   const { toast } = useToast();
   const [image, setImage] = useState<string | null>(null);
-  const [error, setError] = useState('' as string);
+  const [errorField, setErrorField] = useState('' as string);
   const [selectedGender, setSelectedGender] = useState('' as string);
 
-  const fetchStudentData = () => {
-    axios
-      .get(`${import.meta.env.VITE_SERVER_LINK}/student.php`, {
-        params: {
-          student_id: studentID,
-        },
-      })
-      .then((res) => {
-        console.log(res.data, 'sss');
-        setStudent(res.data[0]);
-        setImage(res.data[0].student_image_path);
-      });
+  const fetcher = async (url: string): Promise<Student[]> => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
   };
 
-  useEffect(() => {
-    fetchStudentData();
-  }, []);
+  const { data, error, isLoading } = useSWR(
+    `${import.meta.env.VITE_SERVER_LINK}/student/${studentID}`,
+    fetcher,
+
+    {
+      onSuccess: (data: Student[] | undefined) => {
+        setStudent(data && data.length > 0 ? data[0] : ({} as Student));
+
+        if (data && data.length > 0) {
+          setImage(data[0].student_image_path);
+        }
+
+        console.log(data, 'data');
+      },
+    },
+  );
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching data</div>;
+
+  // const student =
+  //   data && data.length > 0 ? setStudent(data[0] as Student) : ({} as Student);
+
+  // const fetchStudentData = () => {
+  //   axios
+  //     .get(`${import.meta.env.VITE_SERVER_LINK}/student.php`, {
+  //       params: {
+  //         student_id: studentID,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data, 'sss');
+  //       setStudent(res.data[0]);
+  //       setImage(res.data[0].student_image_path);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   fetchStudentData();
+  // }, []);
 
   const handleGender = (value: string) => {
     console.log(value);
@@ -85,7 +99,7 @@ export default function EditStudent({
     e.preventDefault();
 
     if (!image) {
-      setError('Please fill in all fields');
+      setErrorField('Please fill in all fields');
       return;
     }
 

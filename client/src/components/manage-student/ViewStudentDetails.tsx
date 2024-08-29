@@ -1,49 +1,29 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { Student } from '@/types/student';
 import { useParams } from 'react-router';
+import useSWR from 'swr';
 import { Label } from '../ui/label';
-
-interface Student {
-  student_id: string;
-  student_id_code: string;
-  student_image_path: string;
-  student_firstname: string;
-  student_lastname: string;
-  student_name: string;
-  student_middlename: string;
-  student_datebirth: string;
-  student_grade_level: string;
-  student_program: string;
-  student_block_section: string;
-  student_parent_name: string;
-  student_parent_number: string;
-  student_parent_email: string;
-  student_address: string;
-  student_gender: string;
-}
 
 const ViewStudentDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const [student, setStudent] = useState<Student>({} as Student);
-  const [image, setImage] = useState<string | null>(null);
 
-  const fetchStudentData = () => {
-    axios
-      .get(`${import.meta.env.VITE_SERVER_LINK}/student.php`, {
-        params: {
-          student_id: id,
-        },
-      })
-      .then((res) => {
-        console.log(res.data, 'sss');
-        setStudent(res.data[0]);
-        setImage(res.data[0].student_image_path);
-      });
+  const fetcher = async (url: string): Promise<{}[]> => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
   };
 
-  useEffect(() => {
-    fetchStudentData();
-  }, []);
+  const { data, error, isLoading } = useSWR(
+    `${import.meta.env.VITE_SERVER_LINK}/student/${id}`,
+    fetcher,
+  );
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching data</div>;
+
+  const student =
+    data && data.length > 0 ? (data[0] as Student) : ({} as Student);
 
   return (
     <div className="h-full w-full">

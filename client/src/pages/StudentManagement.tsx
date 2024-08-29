@@ -10,31 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Student } from '@/types/student';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
-interface Student {
-  student_id: string;
-  student_id_code: string;
-  student_image_path: string;
-  student_name: string;
-  student_datebirth: string;
-  student_grade_level: string;
-  student_program: string;
-  student_block_section: string;
-  student_parent_name: string;
-  student_parent_number: string;
-  student_parent_email: string;
-  student_address: string;
-  student_gender: string;
-}
-
 const StudentManagement = () => {
   const [showStudentForm, setShowStudentForm] = useState(false);
-  // const [students, setStudents] = useState<Student[]>([]);
   const [showEditForm, setShowEditForm] = useState(false);
   const [studentID, setStudentID] = useState('');
 
@@ -53,13 +37,6 @@ const StudentManagement = () => {
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/student`, fetcher);
 
   console.log(students);
-
-  // const fetchStudents = () => {
-  //   axios.get(`${import.meta.env.VITE_SERVER_LINK}/student`).then((res) => {
-  //     console.log(res.data);
-  //     setStudents(res.data);
-  //   });
-  // };
 
   const handleDelete = (student_id: string) => {
     axios

@@ -1,37 +1,51 @@
 import { create } from 'zustand';
+import useSWR from 'swr';
 import axios from 'axios';
 
-interface Post {
-  id: number;
-  title: string;
-  body: string;
+interface Student {
+  student_id: string;
+  student_id_code: string;
+  student_image_path: string;
+  student_name: string;
+  student_datebirth: string;
+  student_grade_level: string;
+  student_program: string;
+  student_block_section: string;
+  student_parent_name: string;
+  student_parent_number: string;
+  student_parent_email: string;
+  student_address: string;
+  student_gender: string;
 }
 
-interface PostStore {
-  post: Post | null;
-  loading: boolean;
-  error: string | null;
-  postData: (url: string, payload: Omit<Post, 'id'>) => Promise<void>;
-}
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const usePostStore = create<PostStore>((set) => ({
-  post: null,
-  loading: false,
-  error: null,
-  postData: async (url, payload) => {
-    set({ loading: true, error: null });
-    try {
-      const response = await axios.post<Post>(url, payload);
-      set({ post: response.data, loading: false });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        set({
-          error: error.response?.data?.message || error.message,
-          loading: false,
-        });
-      } else {
-        set({ error: 'An unknown error occurred', loading: false });
+const useFetchStudent = create((set) => {
+  return {
+    student: [] as Student[],
+    image: null as string | null,
+    fetchStudentData: (id: string) => {
+      const url = id
+        ? `${import.meta.env.VITE_SERVER_LINK}/student/${id}`
+        : `${import.meta.env.VITE_SERVER_LINK}/student`;
+
+      const { data, error } = useSWR(url, fetcher);
+
+      if (error) {
+        console.error('Error fetching student data:', error);
+        return;
       }
-    }
-  },
-}));
+
+      if (data) {
+        if (id) {
+          set({ student: data[0] });
+          set({ image: data[0].student_image_path });
+        } else {
+          set({ student: data });
+        }
+      }
+    },
+  };
+});
+
+export { useFetchStudent };
