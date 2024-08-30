@@ -18,6 +18,23 @@ import { useState } from 'react';
 import QRCode from 'react-qr-code';
 // import { URL } from 'url';
 
+interface StudentFormData {
+  student_id: string;
+  student_id_code: string;
+  student_image_path: File | null;
+  student_firstname: string;
+  student_lastname: string;
+  student_middlename: string;
+  student_datebirth: string;
+  student_grade_level: string;
+  student_program: string;
+  student_block_section: string;
+  student_parent_name: string;
+  student_parent_number: string;
+  student_parent_email: string;
+  student_address: string;
+}
+
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>;
@@ -31,6 +48,8 @@ export default function EditStudent({
   studentID: string;
   mutate: () => void;
 }) {
+  const [isLoadingSubmission, setIsLoadingSubmission] = useState(false);
+
   const [student, setStudent] = useState<Student>({} as Student);
   const { toast } = useToast();
   const [image, setImage] = useState<string | null>(null);
@@ -80,7 +99,7 @@ export default function EditStudent({
     setStudent((values) => ({ ...values, [name]: value }));
   };
 
-  const handleSubmitUpdate = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!imageFile && !student.student_image_path) {
@@ -89,27 +108,34 @@ export default function EditStudent({
     }
 
     const formData = new FormData();
+
     formData.append(
       'student_image_path',
       imageFile || student.student_image_path,
     );
-    formData.append('student_id_code', student.student_id_code);
-    formData.append('student_name', student.student_name);
-    formData.append('student_datebirth', student.student_datebirth);
-    formData.append('student_address', student.student_address);
+    formData.append('student_name', `${student.student_name} `);
     formData.append(
       'student_gender',
       selectedGender.length > 0 ? selectedGender : student.student_gender,
     );
-    formData.append('student_grade_level', student.student_grade_level);
-    formData.append('student_program', student.student_program);
-    formData.append('student_block_section', student.student_block_section);
-    formData.append('student_parent_name', student.student_parent_name);
-    formData.append('student_parent_number', student.student_parent_number);
-    formData.append('student_parent_email', student.student_parent_email);
 
-    axios
-      .put(
+    Object.entries(student).forEach(([key, value]) => {
+      console.log(key, value);
+      if (
+        key !== 'student_name' &&
+        key !== 'student_gender' &&
+        key !== 'student_image_path'
+      ) {
+        if (value !== null && value !== undefined) {
+          formData.append(key, value.toString());
+        }
+      }
+    });
+
+    console.log(formData, 'formdata');
+
+    try {
+      const response = await axios.put(
         `${import.meta.env.VITE_SERVER_LINK}/student/update/${studentID}`,
         formData,
         {
@@ -117,22 +143,27 @@ export default function EditStudent({
             'Content-Type': 'multipart/form-data',
           },
         },
-      )
-      .then((res) => {
-        console.log(res.data, 'res');
-        if (res.data.status === 'success') {
-          mutate();
-          setShowEditForm(false);
-          toast({
-            title: 'Student Updated Successfully',
-            description: 'Student has been updated successfully',
-          });
-        }
-      })
-      .catch((err) => {
-        console.error('Upload error:', err);
-        setErrorField('Failed to update student');
+      );
+
+      if (response.data.status === 'success') {
+        toast({
+          title: 'Student Updated Successfully',
+          description: 'The student has been updated to the system.',
+        });
+        setShowEditForm(false);
+        mutate();
+      }
+    } catch (error) {
+      console.error(error);
+
+      toast({
+        title: 'Error',
+        description: 'An error occurred while updating the student.',
+        variant: 'destructive',
       });
+    } finally {
+      setIsLoadingSubmission(false);
+    }
   };
 
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -349,10 +380,11 @@ export default function EditStudent({
               Cancel
             </Button>
             <Button
+              disabled={isLoadingSubmission}
               className="w-[20%] self-center bg-[#41644A] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
               type="submit"
             >
-              Update
+              {isLoadingSubmission ? 'Updating...' : 'Update'}
             </Button>
           </div>
         </form>

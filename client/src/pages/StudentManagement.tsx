@@ -1,6 +1,8 @@
 import AddStudent from '@/components/manage-student/AddStudent';
 import EditStudent from '@/components/manage-student/EditStudent';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+
 import {
   Table,
   TableBody,
@@ -12,7 +14,7 @@ import {
 } from '@/components/ui/table';
 import { Student } from '@/types/student';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
@@ -21,6 +23,7 @@ const StudentManagement = () => {
   const [showStudentForm, setShowStudentForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [studentID, setStudentID] = useState('');
+  const { toast } = useToast();
 
   const fetcher = async (url: string): Promise<Student[]> => {
     const response = await fetch(url);
@@ -41,14 +44,24 @@ const StudentManagement = () => {
 
   const handleDelete = (student_id: string) => {
     axios
-      .delete(`${import.meta.env.VITE_SERVER_LINK}/student`, {
-        data: {
-          student_id,
-        },
-      })
+      .delete(`${import.meta.env.VITE_SERVER_LINK}/student/${student_id}`)
       .then((res) => {
         console.log(res.data);
-        // fetchStudents();
+
+        if (res.data.status === 'success') {
+          toast({
+            title: 'Student Deleted Successfully',
+            description: 'The student has been deleted to the system.',
+          });
+          mutate();
+        }
+      })
+      .catch((err) => {
+        toast({
+          title: 'Error',
+          description: 'An error occurred while adding the student.',
+          variant: 'destructive',
+        });
       });
   };
 

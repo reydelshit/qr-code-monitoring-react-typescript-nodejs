@@ -91,7 +91,7 @@ app.get('/protected', authenticateToken, (req: AuthenticatedRequest, res) => {
 });
 
 
-// check student
+// get all student
 app.get("/student", (req, res) => {
   // console.log(req.query)
   const query = "SELECT * FROM students";
@@ -106,7 +106,7 @@ app.get("/student", (req, res) => {
 });
 
 
-// specific books 
+// specific student 
 app.get("/student/:id", (req, res) => {
   const query = "SELECT * FROM students WHERE student_id = ?"
   const id = req.params.id
@@ -244,6 +244,24 @@ app.put(`/student/update/:id`, upload.single('student_image_path'), (req, res) =
 });
 
 
+// DELETE STUDENT 
+
+app.delete("/student/:id", (req, res) => {
+  const query = "DELETE FROM students WHERE student_id = ?"
+  const id = req.params.id
+
+  databaseConnection.query(query, id, (err, data) => {
+      if(err) return res.json(err)
+      return res.json({
+      ...data,
+      message: "succesfully deleted",
+      status: "success",
+    })
+  })
+})
+
+
+
 
 
 
@@ -299,16 +317,6 @@ app.post("/expenses", (req, res) => {
       date: new Date(),
       message: "succesfully added"
       })
-  })
-})
-
-app.delete("/books/:id", (req, res) => {
-  const query = "DELETE FROM books WHERE id = ?"
-  const id = req.params.id
-
-  databaseConnection.query(query, id, (err, data) => {
-      if(err) return res.json(err)
-      return res.json('succesfully deleted')
   })
 })
 

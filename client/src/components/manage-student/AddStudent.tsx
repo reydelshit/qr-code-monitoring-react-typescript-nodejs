@@ -18,10 +18,6 @@ import { useState } from 'react';
 // import { URL } from 'url';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-type ChangeEvent =
-  | React.ChangeEvent<HTMLInputElement>
-  | React.ChangeEvent<HTMLTextAreaElement>;
-
 interface StudentFormData {
   student_id: string;
   student_id_code: string;
@@ -84,14 +80,9 @@ export default function AddStudent({
   const onSubmit: SubmitHandler<StudentFormData> = async (
     data: StudentFormData,
   ) => {
-    console.log(image, 'image');
-
-    console.log(imageFile, 'imageFile');
-
     setIsLoading(true);
 
     const formData = new FormData();
-
     if (!imageFile) {
       setError('Please fill in all fields');
       return;
@@ -134,7 +125,7 @@ export default function AddStudent({
           title: 'Student Added Successfully',
           description: 'The student has been added to the system.',
         });
-        // setShowStudentForm(false);
+        setShowStudentForm(false);
         mutate();
       }
     } catch (error) {
