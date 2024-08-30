@@ -44,7 +44,9 @@ const StudentManagement = () => {
 
   const handleDelete = (student_id: string) => {
     axios
-      .delete(`${import.meta.env.VITE_SERVER_LINK}/student/${student_id}`)
+      .delete(
+        `${import.meta.env.VITE_SERVER_LINK}/student/delete/${student_id}`,
+      )
       .then((res) => {
         console.log(res.data);
 
