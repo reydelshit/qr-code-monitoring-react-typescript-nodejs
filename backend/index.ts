@@ -137,9 +137,10 @@ app.post("/student/create", upload.single('student_image_path'), (req, res) => {
   : 'uploads/66bb6e4ac9ef7.jpeg'; 
 
 
+  console.log("Image Path:", imagePath);
+
   const query = `
     INSERT INTO students (
-      student_id, 
       student_id_code, 
       student_image_path, 
       student_name, 
@@ -157,7 +158,6 @@ app.post("/student/create", upload.single('student_image_path'), (req, res) => {
   `;
 
   const values = [
-    req.body.student_id,
     req.body.student_id_code,
     imagePath,
     req.body.student_name,
@@ -174,6 +174,9 @@ app.post("/student/create", upload.single('student_image_path'), (req, res) => {
 
   databaseConnection.query(query, [values], (err, data) => {
     if (err) return res.json(err);
+
+    console.log("Data:", data);
+
     return res.json({
       ...data,
       message: "Successfully added",

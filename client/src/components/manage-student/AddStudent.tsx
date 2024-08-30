@@ -1,9 +1,10 @@
-import Lgo from '@/assets/prod.jpg';
+import React from 'react';
+
+import defaultProfile from '@/assets/profile.webp';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
-import defaultProfile from '@/assets/profile.webp';
 
 import {
   Select,
@@ -15,15 +16,16 @@ import {
 import axios from 'axios';
 import { useState } from 'react';
 // import { URL } from 'url';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>;
 
-interface Student {
+interface StudentFormData {
   student_id: string;
   student_id_code: string;
-  student_image_path: string;
+  student_image_path: File | null;
   student_firstname: string;
   student_lastname: string;
   student_middlename: string;
@@ -44,7 +46,14 @@ export default function AddStudent({
   setShowStudentForm: (value: boolean) => void;
   mutate: () => void;
 }) {
-  const [student, setStudent] = useState<Student>({} as Student);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<StudentFormData>();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const { toast } = useToast();
   const [image, setImage] = useState<string | null>(null);
   const [error, setError] = useState('' as string);
@@ -55,63 +64,6 @@ export default function AddStudent({
   const handleGender = (value: string) => {
     console.log(value);
     setSelectedGender(value);
-  };
-
-  const handleChange = (e: ChangeEvent) => {
-    const value = e.target.value;
-    const name = e.target.name;
-    setStudent((values) => ({ ...values, [name]: value }));
-  };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!imageFile) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    console.log(student);
-
-    const formData = new FormData();
-    formData.append('student_image_path', imageFile);
-
-    // Append other student data to formData
-    formData.append('student_id', student.student_id);
-    formData.append('student_id_code', student.student_id_code);
-    formData.append(
-      'student_name',
-      `${student.student_firstname} ${student.student_lastname} ${student.student_middlename}`,
-    );
-    formData.append('student_datebirth', student.student_datebirth);
-    formData.append('student_address', student.student_address);
-    formData.append('student_gender', selectedGender);
-    formData.append('student_grade_level', student.student_grade_level);
-    formData.append('student_program', student.student_program);
-    formData.append('student_block_section', student.student_block_section);
-    formData.append('student_parent_name', student.student_parent_name);
-    formData.append('student_parent_number', student.student_parent_number);
-    formData.append('student_parent_email', student.student_parent_email);
-
-    axios
-      .post(`${import.meta.env.VITE_SERVER_LINK}/student/create`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.status === 'success') {
-          mutate();
-          setShowStudentForm(false);
-          toast({
-            title: 'Student: Added Successfully',
-            description: 'Student has been added successfully',
-          });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   };
 
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,6 +81,75 @@ export default function AddStudent({
     }
   };
 
+  const onSubmit: SubmitHandler<StudentFormData> = async (
+    data: StudentFormData,
+  ) => {
+    console.log(image, 'image');
+
+    console.log(imageFile, 'imageFile');
+
+    setIsLoading(true);
+
+    const formData = new FormData();
+
+    if (!imageFile) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    formData.append(
+      'student_name',
+      `${data.student_firstname} ${data.student_lastname}`,
+    );
+
+    formData.append('student_gender', selectedGender);
+    formData.append('student_image_path', imageFile);
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (
+        key !== 'student_firstname' &&
+        key !== 'student_lastname' &&
+        key !== 'student_gender' &&
+        key !== 'student_image_path'
+      ) {
+        if (value !== null && value !== undefined) {
+          formData.append(key, value.toString());
+        }
+      }
+    });
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_LINK}/student/create`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      if (response.data.status === 'success') {
+        toast({
+          title: 'Student Added Successfully',
+          description: 'The student has been added to the system.',
+        });
+        // setShowStudentForm(false);
+        mutate();
+      }
+    } catch (error) {
+      console.error(error);
+
+      toast({
+        title: 'Error',
+        description: 'An error occurred while adding the student.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="relative flex w-[80%] flex-col items-center justify-center rounded-md border-2 bg-white text-center shadow-lg">
       <span
@@ -138,7 +159,10 @@ export default function AddStudent({
         x
       </span>
       <div className="flex w-full flex-col items-center gap-[1rem] p-2">
-        <form className="w-full px-4 text-start" onSubmit={handleSubmit}>
+        <form
+          className="w-full px-4 text-start"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="flex gap-4">
             <div className="flex w-[25rem] flex-col">
               <img
@@ -161,41 +185,46 @@ export default function AddStudent({
               <div className="w-full">
                 <Label className="mb-2 text-start">Student ID</Label>
                 <Input
-                  name="student_id_code"
                   className="mb-2"
                   required
-                  onChange={handleChange}
+                  {...register('student_id_code', {
+                    required: 'Student ID is required',
+                  })}
                 />
+                {errors.student_id && <span>{errors.student_id.message}</span>}
               </div>
 
               <div className="flex gap-4">
                 <div className="w-full">
                   <Label className="mb-2 text-start">First Name</Label>
                   <Input
-                    name="student_firstname"
                     className="mb-2"
                     required
-                    onChange={handleChange}
+                    {...register('student_firstname', {
+                      required: 'Firstname is required',
+                    })}
                   />
                 </div>
 
                 <div className="w-full">
                   <Label className="mb-2 text-start">Last Name</Label>
                   <Input
-                    name="student_lastname"
                     className="mb-2"
                     required
-                    onChange={handleChange}
+                    {...register('student_lastname', {
+                      required: 'Lastname is required',
+                    })}
                   />
                 </div>
 
                 <div className="w-full">
                   <Label className="mb-2 text-start">Middle Name</Label>
                   <Input
-                    name="student_middlename"
                     className="mb-2"
                     required
-                    onChange={handleChange}
+                    {...register('student_middlename', {
+                      required: 'Firstname is required',
+                    })}
                   />
                 </div>
               </div>
@@ -203,9 +232,11 @@ export default function AddStudent({
                 <Label className="mb-2 text-start">Date of Birth</Label>
                 <Input
                   type="date"
-                  name="student_datebirth"
                   className="mb-2"
-                  onChange={handleChange}
+                  required
+                  {...register('student_datebirth', {
+                    required: 'student_datebirth is required',
+                  })}
                 />
               </div>
 
@@ -213,10 +244,11 @@ export default function AddStudent({
                 <div className="w-full">
                   <Label className="mb-2 text-start">Address</Label>
                   <Input
-                    name="student_address"
                     className="mb-2"
                     required
-                    onChange={handleChange}
+                    {...register('student_address', {
+                      required: 'student_address is required',
+                    })}
                   />
                 </div>
 
@@ -244,30 +276,33 @@ export default function AddStudent({
               <div className="w-full">
                 <Label className="mb-2 text-start">Program</Label>
                 <Input
-                  name="student_program"
                   className="mb-2"
                   required
-                  onChange={handleChange}
+                  {...register('student_program', {
+                    required: 'student_program is required',
+                  })}
                 />
               </div>
               <div className="flex gap-4">
                 <div className="w-full">
                   <Label className="mb-2 text-start">Grade Level</Label>
                   <Input
-                    name="student_grade_level"
                     className="mb-2"
                     required
-                    onChange={handleChange}
+                    {...register('student_grade_level', {
+                      required: 'student_grade_level is required',
+                    })}
                   />
                 </div>
 
                 <div className="w-full">
                   <Label className="mb-2 text-start">Block / Section</Label>
                   <Input
-                    name="student_block_section"
                     className="mb-2"
                     required
-                    onChange={handleChange}
+                    {...register('student_block_section', {
+                      required: 'student_block_section is required',
+                    })}
                   />
                 </div>
               </div>
@@ -277,10 +312,11 @@ export default function AddStudent({
               <div className="w-full">
                 <Label className="mb-2 text-start">Parent/Guardian Name</Label>
                 <Input
-                  name="student_parent_name"
                   className="mb-2"
                   required
-                  onChange={handleChange}
+                  {...register('student_parent_name', {
+                    required: 'student_parent_name is required',
+                  })}
                 />
               </div>
               <div className="flex gap-4">
@@ -289,11 +325,12 @@ export default function AddStudent({
                     Parent/Guardian Phone Number(s)
                   </Label>
                   <Input
-                    name="student_parent_number"
                     className="mb-2"
                     required
                     type="number"
-                    onChange={handleChange}
+                    {...register('student_parent_number', {
+                      required: 'student_parent_number is required',
+                    })}
                   />
                 </div>
 
@@ -302,10 +339,12 @@ export default function AddStudent({
                     Parent/Guardian Email Address (Optional)
                   </Label>
                   <Input
-                    name="student_parent_email"
                     className="mb-2"
                     type="email"
-                    onChange={handleChange}
+                    required
+                    {...register('student_parent_email', {
+                      required: 'student_parent_email is required',
+                    })}
                   />
                 </div>
               </div>
@@ -322,10 +361,11 @@ export default function AddStudent({
               Cancel
             </Button>
             <Button
+              disabled={isLoading}
               className="w-[20%] self-center bg-[#41644A] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
               type="submit"
             >
-              Add Student
+              {isLoading ? 'Submitting...' : 'Submit'}
             </Button>
           </div>
         </form>
