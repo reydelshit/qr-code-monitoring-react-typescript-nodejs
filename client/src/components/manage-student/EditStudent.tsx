@@ -57,10 +57,7 @@ export default function EditStudent({
         setStudent(data && data.length > 0 ? data[0] : ({} as Student));
 
         if (data && data.length > 0) {
-          // console.log(data[0].student_image_path);
           setImage(data[0].student_image_path);
-          // const file = new File([], data[0].student_image_path);
-          // setImageFile(file);
         }
 
         console.log(data, 'data');
@@ -73,6 +70,7 @@ export default function EditStudent({
 
   const handleGender = (value: string) => {
     console.log(value);
+
     setSelectedGender(value);
   };
 
@@ -99,7 +97,10 @@ export default function EditStudent({
     formData.append('student_name', student.student_name);
     formData.append('student_datebirth', student.student_datebirth);
     formData.append('student_address', student.student_address);
-    formData.append('student_gender', student.student_gender || selectedGender);
+    formData.append(
+      'student_gender',
+      selectedGender.length > 0 ? selectedGender : student.student_gender,
+    );
     formData.append('student_grade_level', student.student_grade_level);
     formData.append('student_program', student.student_program);
     formData.append('student_block_section', student.student_block_section);
@@ -134,18 +135,6 @@ export default function EditStudent({
       });
   };
 
-  // const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const data = new FileReader();
-  //   data.readAsDataURL(e.target.files![0]);
-
-  //   data.onloadend = () => {
-  //     const base64 = data.result;
-  //     if (base64) {
-  //       setImage(base64.toString());
-  //     }
-  //   };
-  // };
-
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files ? event.target.files[0] : null;
 
@@ -162,7 +151,7 @@ export default function EditStudent({
   };
 
   return (
-    <div className="relative flex w-[80%] flex-col items-center justify-center rounded-md border-2 bg-white text-center shadow-lg">
+    <div className="relative flex w-[60%] flex-col items-center justify-center rounded-md border-2 bg-white text-center shadow-lg">
       <span
         onClick={() => setShowEditForm(false)}
         className="absolute right-4 top-2 cursor-pointer text-2xl"

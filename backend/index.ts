@@ -6,6 +6,7 @@ import path from 'path';
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
 import mysql from 'mysql';
 import multer from 'multer';
+import { stat } from 'fs';
 
 
 dotenv.config();
@@ -128,6 +129,62 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+//CREATE STUDENT
+app.post("/student/create", upload.single('student_image_path'), (req, res) => {
+
+  const imagePath = req.file ? 
+    path.join('uploads', req.file.filename)
+  : 'uploads/66bb6e4ac9ef7.jpeg'; 
+
+
+  const query = `
+    INSERT INTO students (
+      student_id, 
+      student_id_code, 
+      student_image_path, 
+      student_name, 
+      student_datebirth, 
+      student_address, 
+      student_gender, 
+      student_grade_level, 
+      student_program, 
+      student_block_section, 
+      student_parent_name, 
+      student_parent_number, 
+      student_parent_email
+    ) 
+    VALUES (?)
+  `;
+
+  const values = [
+    req.body.student_id,
+    req.body.student_id_code,
+    imagePath,
+    req.body.student_name,
+    req.body.student_datebirth,
+    req.body.student_address,
+    req.body.student_gender,
+    req.body.student_grade_level,
+    req.body.student_program,
+    req.body.student_block_section,
+    req.body.student_parent_name,
+    req.body.student_parent_number,
+    req.body.student_parent_email
+  ];
+
+  databaseConnection.query(query, [values], (err, data) => {
+    if (err) return res.json(err);
+    return res.json({
+      ...data,
+      message: "Successfully added",
+      status: "success",
+    });
+  });
+});
+
+
+
+// UPDATE STUDENT 
 app.put(`/student/update/:id`, upload.single('student_image_path'), (req, res) => {
   const query = `
     UPDATE students 

@@ -34,18 +34,23 @@ interface Student {
   student_parent_name: string;
   student_parent_number: string;
   student_parent_email: string;
+  student_address: string;
 }
 
 export default function AddStudent({
   setShowStudentForm,
+  mutate,
 }: {
   setShowStudentForm: (value: boolean) => void;
+  mutate: () => void;
 }) {
   const [student, setStudent] = useState<Student>({} as Student);
   const { toast } = useToast();
   const [image, setImage] = useState<string | null>(null);
   const [error, setError] = useState('' as string);
   const [selectedGender, setSelectedGender] = useState('' as string);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [errorImage, setErrorImage] = useState<string | null>(null);
 
   const handleGender = (value: string) => {
     console.log(value);
@@ -60,46 +65,68 @@ export default function AddStudent({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!image) {
+    if (!imageFile) {
       setError('Please fill in all fields');
       return;
     }
 
     console.log(student);
 
+    const formData = new FormData();
+    formData.append('student_image_path', imageFile);
+
+    // Append other student data to formData
+    formData.append('student_id', student.student_id);
+    formData.append('student_id_code', student.student_id_code);
+    formData.append(
+      'student_name',
+      `${student.student_firstname} ${student.student_lastname} ${student.student_middlename}`,
+    );
+    formData.append('student_datebirth', student.student_datebirth);
+    formData.append('student_address', student.student_address);
+    formData.append('student_gender', selectedGender);
+    formData.append('student_grade_level', student.student_grade_level);
+    formData.append('student_program', student.student_program);
+    formData.append('student_block_section', student.student_block_section);
+    formData.append('student_parent_name', student.student_parent_name);
+    formData.append('student_parent_number', student.student_parent_number);
+    formData.append('student_parent_email', student.student_parent_email);
+
     axios
-      .post(`${import.meta.env.VITE_SERVER_LINK}/student.php`, {
+      .post(`${import.meta.env.VITE_SERVER_LINK}/student/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        ...student,
-        student_name: `${student.student_firstname} ${student.student_lastname} ${student.student_middlename}`,
-        student_image_path: image,
-        student_gender: selectedGender,
       })
       .then((res) => {
         console.log(res.data);
         if (res.data.status === 'success') {
-          window.location.reload();
+          mutate();
           setShowStudentForm(false);
           toast({
-            title: 'product: Added Successfully',
-            description: 'product has been added successfully',
+            title: 'Student: Added Successfully',
+            description: 'Student has been added successfully',
           });
         }
+      })
+      .catch((err) => {
+        console.error(err);
       });
   };
 
-  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const data = new FileReader();
-    data.readAsDataURL(e.target.files![0]);
+  const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files ? event.target.files[0] : null;
 
-    data.onloadend = () => {
-      const base64 = data.result;
-      if (base64) {
-        setImage(base64.toString());
+    if (selectedFile) {
+      if (selectedFile.type.startsWith('image/')) {
+        setImageFile(selectedFile);
+        setImage(URL.createObjectURL(selectedFile));
+        setErrorImage(null);
+      } else {
+        setErrorImage('Please select a valid image file.');
+        setImageFile(null);
       }
-    };
+    }
   };
 
   return (

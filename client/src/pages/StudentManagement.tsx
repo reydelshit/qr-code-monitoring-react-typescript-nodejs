@@ -156,7 +156,7 @@ const StudentManagement = () => {
 
       {showStudentForm && (
         <div className="absolute top-0 flex w-full max-w-[100%] items-center justify-center bg-white bg-opacity-80">
-          <AddStudent setShowStudentForm={setShowStudentForm} />
+          <AddStudent mutate={mutate} setShowStudentForm={setShowStudentForm} />
         </div>
       )}
 
