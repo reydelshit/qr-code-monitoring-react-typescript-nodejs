@@ -72,9 +72,6 @@ const StudentManagement = () => {
     setShowEditForm(true);
   };
 
-  //   fetchStudents();
-  // }, []);
-
   return (
     <div className="relative h-full w-full">
       <h1 className="my-4 text-6xl font-bold">Student Management</h1>
