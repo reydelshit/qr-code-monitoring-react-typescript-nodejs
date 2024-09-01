@@ -3,7 +3,7 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import multer from 'multer';
 import { Router } from 'express';
-import { databaseConnection } from '../../connections/DatabaseConnection';
+import { databaseConnection } from '../connections/DatabaseConnection';
 
 const router = Router();
 
@@ -44,47 +44,25 @@ const storage = multer.diskStorage({
   
   
   
-  //CREATE STUDENT
-  router.post("/create", upload.single('student_image_path'), (req, res) => {
-  
-    const imagePath = req.file ? 
-      path.join('uploads', req.file.filename)
-    : 'uploads/66bb6e4ac9ef7.jpeg'; 
-  
-  
-    console.log("Image Path:", imagePath);
+  //CREATE ATTENDANCE
+  router.post("/create", (req, res) => {
+
   
     const query = `
-      INSERT INTO students (
+      INSERT INTO attendance (
         student_id_code, 
-        student_image_path, 
-        student_name, 
-        student_datebirth, 
-        student_address, 
-        student_gender, 
-        student_grade_level, 
-        student_program, 
-        student_block_section, 
-        student_parent_name, 
-        student_parent_number, 
-        student_parent_email
+        timeIn,
+        timeOut,
+        created_at
       ) 
       VALUES (?)
     `;
   
     const values = [
-      req.body.student_id_code,
-      imagePath,
-      req.body.student_name,
-      req.body.student_datebirth,
-      req.body.student_address,
-      req.body.student_gender,
-      req.body.student_grade_level,
-      req.body.student_program,
-      req.body.student_block_section,
-      req.body.student_parent_name,
-      req.body.student_parent_number,
-      req.body.student_parent_email
+        req.body.student_id_code,
+        req.body.timeIn,
+        req.body.timeOut,
+        req.body.created_at
     ];
   
     databaseConnection.query(query, [values], (err, data) => {
@@ -187,7 +165,7 @@ const storage = multer.diskStorage({
     })
   
 
-  export const studentRouter = router;
+  export const attendanceRouter = router;
   
   
   

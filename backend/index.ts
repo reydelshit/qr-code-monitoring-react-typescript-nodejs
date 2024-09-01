@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
-import { studentRouter } from './api/students/studentRoute';
+import { studentRouter } from './api/studentRoute';
+import { attendanceRouter } from './api/attendanceRoute';
 
 
 
@@ -79,4 +80,6 @@ app.get('/protected', authenticateToken, (req: AuthenticatedRequest, res) => {
 
 
 app.use("/student", studentRouter);
+app.use("/attendance", attendanceRouter);
+
 
