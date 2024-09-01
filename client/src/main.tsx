@@ -9,6 +9,7 @@ import StudentManagement from './pages/StudentManagement';
 import ScanStation from './pages/ScanStation';
 import ViewStudentDetails from './components/manage-student/ViewStudentDetails';
 import Login from './pages/Login';
+import Message from './pages/Message';
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: 'AttendanceLog',
+        path: 'attendance-log',
         element: <AttendanceLog />,
       },
       {
@@ -24,12 +25,16 @@ const router = createBrowserRouter([
         element: <Reports />,
       },
       {
-        path: 'StudentManagement',
+        path: 'message',
+        element: <Message />,
+      },
+      {
+        path: 'student-management',
         element: <StudentManagement />,
       },
 
       {
-        path: 'StudentManagement/:id',
+        path: 'student-management/:id',
         element: <ViewStudentDetails />,
       },
 

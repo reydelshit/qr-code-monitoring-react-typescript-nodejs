@@ -140,7 +140,7 @@ const StudentManagement = () => {
                   <TableCell>
                     <div className="flex items-center justify-center gap-2">
                       <Button className="bg-green-500 text-white">
-                        <Link to={`/StudentManagement/${student.student_id}`}>
+                        <Link to={`/student-management/${student.student_id}`}>
                           View
                         </Link>
                       </Button>

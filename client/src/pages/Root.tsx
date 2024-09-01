@@ -26,16 +26,24 @@ const Root = () => {
           </Link>
 
           <Link
-            className={`p-2 hover:text-red-500 ${params.pathname === '/StudentManagement' ? 'bg-orange-500 text-white' : ''}`}
-            to="/StudentManagement"
+            className={`p-2 hover:text-red-500 ${params.pathname === '/student-management' ? 'bg-orange-500 text-white' : ''}`}
+            to="/student-management"
           >
-            Student Management
+            Students
           </Link>
+
           <Link
-            className={`p-2 hover:text-red-500 ${params.pathname === '/AttendanceLog' ? 'bg-orange-500 text-white' : ''}`}
-            to="/AttendanceLog"
+            className={`p-2 hover:text-red-500 ${params.pathname === '/message' ? 'bg-orange-500 text-white' : ''}`}
+            to="/message"
           >
-            Attendance Log
+            Message
+          </Link>
+
+          <Link
+            className={`p-2 hover:text-red-500 ${params.pathname === '/attendance-log' ? 'bg-orange-500 text-white' : ''}`}
+            to="/attendance-log"
+          >
+            Attendance
           </Link>
           <Link
             className={`p-2 hover:text-red-500 ${params.pathname === '/Reports' ? 'bg-orange-500 text-white' : ''}`}

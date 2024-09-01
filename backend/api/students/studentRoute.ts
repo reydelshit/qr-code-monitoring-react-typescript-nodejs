@@ -176,6 +176,15 @@ const storage = multer.diskStorage({
   })
   
   
+    // specific student 
+    router.get("/scan/:id", (req, res) => {
+      const query = "SELECT * FROM students WHERE student_id_code = ?"
+      const id = req.params.id
+      databaseConnection.query(query, [id], (err, data) => {
+          if(err) return res.json(err)
+          return res.json(data)
+      })
+    })
   
 
   export const studentRouter = router;
