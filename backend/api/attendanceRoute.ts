@@ -54,9 +54,7 @@ router.get("/:id", (req, res) => {
   
   
   //CREATE ATTENDANCE
-  router.post("/create", (req, res) => {
-
-  
+  router.post("/create/time-in", (req, res) => {
     const query = `
       INSERT INTO attendance (
         student_id_code, 
@@ -81,6 +79,7 @@ router.get("/:id", (req, res) => {
   
       return res.json({
         ...data,
+        lastID: data.insertId,
         message: "Successfully added",
         status: "success",
       });
@@ -89,7 +88,7 @@ router.get("/:id", (req, res) => {
   
   
   
-  // UPDATE STUDENT 
+  // UPDATE ATTENDANCE TIMEOUT
   router.put(`/update`, (req, res) => {
     const query = `
        UPDATE attendance 
@@ -97,7 +96,8 @@ SET
     timeOut = ?
 WHERE 
     student_id_code = ? 
-    AND DATE(timeIn) = CURDATE();;       
+    AND DATE(timeIn) = CURDATE()
+    AND (timeOut IS NULL OR DATE(timeOut) != CURDATE());    
     `;
   
   

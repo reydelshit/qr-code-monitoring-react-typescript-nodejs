@@ -18,6 +18,7 @@ import useSWR from 'swr';
 import moment from 'moment';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 
 interface IDetectedBarcode {
   boundingBox: IBoundingBox;
@@ -57,6 +58,7 @@ const ScanStation = () => {
     Attendance[]
   >([]);
   const [showManualInput, setShowManualInput] = useState(false);
+  const { toast } = useToast();
 
   const fetcher = async (url: string): Promise<Attendance[]> => {
     const response = await fetch(url);
@@ -89,7 +91,7 @@ const ScanStation = () => {
   const handleTimeIn = async (student_id: string) => {
     try {
       await axios
-        .post(`${import.meta.env.VITE_SERVER_LINK}/attendance/create`, {
+        .post(`${import.meta.env.VITE_SERVER_LINK}/attendance/create/time-in`, {
           student_id_code: student_id,
           timeIn: moment().format('YYYY-MM-DD HH:mm:ss'),
           timeOut: 'n/a',
@@ -141,9 +143,12 @@ const ScanStation = () => {
               setStudent({} as Student);
             }, 6000);
           } else {
-            console.log(
-              'there was an error updating the time out. maybe the student has not yet time in.',
-            );
+            toast({
+              title: 'Error',
+              description:
+                'There was an error updating the time out. Maybe the student has not yet time in or the time out has already been set.',
+              variant: 'destructive',
+            });
           }
 
           if (res.data.status === 'success') {
@@ -166,7 +171,7 @@ const ScanStation = () => {
 
         <Tabs
           defaultValue="In"
-          className="my-[2rem] flex w-full flex-col justify-center border-2"
+          className="my-[2rem] flex h-full w-full flex-col border-2"
         >
           <TabsList className="h-[4rem]">
             <TabsTrigger
@@ -192,149 +197,153 @@ const ScanStation = () => {
             <div className="flex h-full w-[100%] items-start justify-center gap-4">
               {/* <img className="w-[20%]" src={ProfileDefault} alt="Student Image" /> */}
 
-              <div className="w-[30%]">
-                <Scanner
-                  allowMultiple={false}
-                  onScan={(result: IDetectedBarcode[]) => {
-                    // console.log(result);
-                    // setStudentID(result[0].rawValue);
+              <div className="flex max-h-[30rem]">
+                <div className="h-full w-[30%]">
+                  <Scanner
+                    allowMultiple={false}
+                    onScan={(result: IDetectedBarcode[]) => {
+                      // console.log(result);
+                      // setStudentID(result[0].rawValue);
 
-                    console.log('Student ID:', result[0].rawValue);
+                      console.log('Student ID:', result[0].rawValue);
 
-                    fetchStudentData(result[0].rawValue);
-                    handleTimeIn(result[0].rawValue);
-                  }}
-                />
+                      fetchStudentData(result[0].rawValue);
+                      handleTimeIn(result[0].rawValue);
+                    }}
+                  />
 
-                <Button
-                  onClick={() => {
-                    console.log('Show Manual Input');
-                    setShowManualInput(!showManualInput);
-                  }}
-                  className="z-10 my-2"
-                >
-                  {showManualInput
-                    ? 'Hide Manual Input'
-                    : ' Scan not working? Click here to manually input student ID.'}
-                </Button>
+                  <Button
+                    onClick={() => {
+                      console.log('Show Manual Input');
+                      setShowManualInput(!showManualInput);
+                    }}
+                    className="z-10 my-2"
+                  >
+                    {showManualInput
+                      ? 'Hide Manual Input'
+                      : ' Scan not working? Click here to manually input student ID.'}
+                  </Button>
 
-                {showManualInput && (
-                  <div className="w-full">
-                    <Label>Enter Student ID</Label>
-                    <Input
-                      placeholder="Enter Student ID"
-                      onChange={(e) => setStudentID(e.target.value)}
-                    />
-
-                    <div className="my-2 flex w-full justify-end">
-                      <Button
-                        onClick={() => {
-                          if (studentID.length > 0) {
-                            fetchStudentData(studentID);
-                            handleTimeIn(studentID);
-                          }
-                        }}
-                      >
-                        Submit
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid h-full w-[80%] grid-cols-2 border-2">
-                {student.student_id_code?.length > 0 ? (
-                  <div className="flex w-full flex-col items-center border-2">
-                    <h1 className="my-2 w-full text-start font-bold">
-                      Student Information
-                    </h1>
-                    <div className="flex w-full items-center gap-4">
-                      <img
-                        className="h-[20rem] w-[15rem] rounded-xl object-cover"
-                        src={
-                          student.student_image_path?.length > 0
-                            ? `${import.meta.env.VITE_SERVER_LINK}/${student.student_image_path}`
-                            : ProfileDefault
-                        }
-                        alt="Student Image"
+                  {showManualInput && (
+                    <div className="w-full">
+                      <Label>Enter Student ID</Label>
+                      <Input
+                        placeholder="Enter Student ID"
+                        onChange={(e) => setStudentID(e.target.value)}
                       />
-                      <div>
-                        <span>
-                          <Label>Student Name:</Label>
-                          <p className="font-bold">{student.student_name}</p>
-                        </span>
-                        <span>
-                          <Label>Grade Level:</Label>
-                          <p className="font-bold">
-                            {student.student_grade_level}
-                          </p>
-                        </span>
 
-                        <span>
-                          <Label>Block Section: </Label>
-                          <p className="font-bold">
-                            {student.student_block_section}
-                          </p>
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex w-full justify-end border-2 px-4">
-                      {student && student.student_name?.length > 0 && (
+                      <div className="my-2 flex w-full justify-end">
                         <Button
-                          className="my-5"
                           onClick={() => {
-                            console.log(student.student_id_code);
+                            if (studentID.length > 0) {
+                              fetchStudentData(studentID);
+                              handleTimeIn(studentID);
+                            }
                           }}
                         >
-                          Time In
+                          Submit
                         </Button>
-                      )}
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="flex w-full flex-col items-center justify-center border-2">
-                    No Scan Student Data
-                    <span className="inline-block">
-                      Scan a student ID to view their information and set their
-                      time in.
-                    </span>
-                  </div>
-                )}
+                  )}
+                </div>
 
-                <div className="w-full">
-                  <h1 className="my-2 font-bold">Todays Entries</h1>
+                <div className="grid w-[80%] grid-cols-2 border-2">
+                  {student.student_id_code?.length > 0 ? (
+                    <div className="flex h-full w-full flex-col items-center border-2 border-orange-600">
+                      <h1 className="my-2 w-full text-start font-bold">
+                        Student Information
+                      </h1>
+                      <div className="flex w-full items-center gap-4">
+                        <img
+                          className="h-[20rem] w-[15rem] rounded-xl object-cover"
+                          src={
+                            student.student_image_path?.length > 0
+                              ? `${import.meta.env.VITE_SERVER_LINK}/${student.student_image_path}`
+                              : ProfileDefault
+                          }
+                          alt="Student Image"
+                        />
+                        <div>
+                          <span>
+                            <Label>Student Name:</Label>
+                            <p className="font-bold">{student.student_name}</p>
+                          </span>
+                          <span>
+                            <Label>Grade Level:</Label>
+                            <p className="font-bold">
+                              {student.student_grade_level}
+                            </p>
+                          </span>
 
-                  <div>
-                    <Table>
-                      <TableCaption>A list of recent attendance.</TableCaption>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Student ID</TableHead>
-                          <TableHead>Time In</TableHead>
-                          <TableHead>Time Out</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {attendance?.map((entry, index) => {
-                          return (
-                            <TableRow key={index}>
-                              <TableCell className="font-medium">
-                                {entry.student_id_code}
-                              </TableCell>
-                              <TableCell>
-                                {moment(entry.timeIn).format('LLLL')}
-                              </TableCell>
-                              <TableCell>
-                                {entry.timeOut === 'n/a'
-                                  ? 'Not yet set'
-                                  : moment(entry.timeOut).format('LLLL')}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
+                          <span>
+                            <Label>Block Section: </Label>
+                            <p className="font-bold">
+                              {student.student_block_section}
+                            </p>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex w-full justify-end border-2 px-4">
+                        {student && student.student_name?.length > 0 && (
+                          <Button
+                            className="my-5"
+                            onClick={() => {
+                              console.log(student.student_id_code);
+                            }}
+                          >
+                            Time In
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex max-h-[30rem] w-full flex-col items-center justify-center border-2">
+                      No Scan Student Data
+                      <span className="inline-block">
+                        Scan a student ID to view their information and set
+                        their time in.
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="w-full">
+                    <h1 className="my-2 font-bold">Todays Entries</h1>
+
+                    <div>
+                      <Table>
+                        <TableCaption>
+                          A list of recent attendance.
+                        </TableCaption>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Student ID</TableHead>
+                            <TableHead>Time In</TableHead>
+                            <TableHead>Time Out</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {attendance?.map((entry, index) => {
+                            return (
+                              <TableRow key={index}>
+                                <TableCell className="font-medium">
+                                  {entry.student_id_code}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(entry.timeIn).format('LLLL')}
+                                </TableCell>
+                                <TableCell>
+                                  {entry.timeOut === 'n/a'
+                                    ? 'Not yet set'
+                                    : moment(entry.timeOut).format('LLLL')}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -344,7 +353,7 @@ const ScanStation = () => {
             <div className="flex h-full w-[100%] items-start justify-center gap-4">
               {/* <img className="w-[20%]" src={ProfileDefault} alt="Student Image" /> */}
 
-              <div className="w-[30%]">
+              <div className="max-h-[30rem] w-[30%]">
                 <Scanner
                   allowMultiple={false}
                   onScan={(result: IDetectedBarcode[]) => {
@@ -447,7 +456,7 @@ const ScanStation = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex w-full flex-col items-center justify-center border-2">
+                  <div className="flex max-h-[30rem] w-full flex-col items-center justify-center border-2">
                     No Scan Student Data
                     <span className="inline-block">
                       Scan a student ID to view their information and set their

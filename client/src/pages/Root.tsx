@@ -36,7 +36,7 @@ const Root = () => {
             className={`p-2 hover:text-red-500 ${params.pathname === '/message' ? 'bg-orange-500 text-white' : ''}`}
             to="/message"
           >
-            Message
+            Messages
           </Link>
 
           <Link
