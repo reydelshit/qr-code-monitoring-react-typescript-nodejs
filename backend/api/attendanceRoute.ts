@@ -89,19 +89,24 @@ router.get("/:id", (req, res) => {
   
   
   // UPDATE ATTENDANCE TIMEOUT
-  router.put(`/update`, (req, res) => {
+  router.put(`/update/time-out`, (req, res) => {
     const query = `
-       UPDATE attendance 
-SET 
-    timeOut = ?
-WHERE 
-    student_id_code = ? 
-    AND DATE(timeIn) = CURDATE()
-    AND (timeOut IS NULL OR DATE(timeOut) != CURDATE());    
-    `;
+        UPDATE attendance a
+        JOIN (
+          SELECT attendance_id
+          FROM attendance
+          WHERE student_id_code =  ?
+          ORDER BY timeIn DESC
+          LIMIT 1
+        ) AS latest ON a.attendance_id = latest.attendance_id
+        SET a.timeOut = ?
+        WHERE a.student_id_code =  ?;
+      `;
+
   
   
     const values = [
+        req.body.student_id_code,
         req.body.timeOut,
         req.body.student_id_code
     ];

@@ -129,7 +129,7 @@ const ScanStation = () => {
   const handleTimeOut = async (student_id: string) => {
     try {
       await axios
-        .put(`${import.meta.env.VITE_SERVER_LINK}/attendance/update`, {
+        .put(`${import.meta.env.VITE_SERVER_LINK}/attendance/update/time-out`, {
           student_id_code: student_id,
           timeOut: moment().format('YYYY-MM-DD HH:mm:ss'),
         })
@@ -355,7 +355,7 @@ const ScanStation = () => {
 
               <div className="max-h-[30rem] w-[30%]">
                 <Scanner
-                  allowMultiple={false}
+                  allowMultiple={true}
                   onScan={(result: IDetectedBarcode[]) => {
                     // console.log(result);
                     // setStudentID(result[0].rawValue);
