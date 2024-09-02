@@ -17,6 +17,7 @@ import {
 import useSWR from 'swr';
 import moment from 'moment';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 interface IDetectedBarcode {
   boundingBox: IBoundingBox;
@@ -55,6 +56,7 @@ const ScanStation = () => {
   const [attendanceForTimeout, setAttendanceForTimeout] = useState<
     Attendance[]
   >([]);
+  const [showManualInput, setShowManualInput] = useState(false);
 
   const fetcher = async (url: string): Promise<Attendance[]> => {
     const response = await fetch(url);
@@ -99,6 +101,9 @@ const ScanStation = () => {
 
           if (res.data.status === 'success') {
             mutate();
+            setTimeout(() => {
+              setStudent({} as Student);
+            }, 6000);
           }
         });
     } catch (error) {
@@ -132,6 +137,9 @@ const ScanStation = () => {
 
           if (res.data.affectedRows > 0) {
             mutate();
+            setTimeout(() => {
+              setStudent({} as Student);
+            }, 6000);
           } else {
             console.log(
               'there was an error updating the time out. maybe the student has not yet time in.',
@@ -198,9 +206,40 @@ const ScanStation = () => {
                   }}
                 />
 
-                <Button className="my-2">
-                  Scan not working? Click here to manually input student ID.
+                <Button
+                  onClick={() => {
+                    console.log('Show Manual Input');
+                    setShowManualInput(!showManualInput);
+                  }}
+                  className="z-10 my-2"
+                >
+                  {showManualInput
+                    ? 'Hide Manual Input'
+                    : ' Scan not working? Click here to manually input student ID.'}
                 </Button>
+
+                {showManualInput && (
+                  <div className="w-full">
+                    <Label>Enter Student ID</Label>
+                    <Input
+                      placeholder="Enter Student ID"
+                      onChange={(e) => setStudentID(e.target.value)}
+                    />
+
+                    <div className="my-2 flex w-full justify-end">
+                      <Button
+                        onClick={() => {
+                          if (studentID.length > 0) {
+                            fetchStudentData(studentID);
+                            handleTimeIn(studentID);
+                          }
+                        }}
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid h-full w-[80%] grid-cols-2 border-2">
@@ -321,9 +360,40 @@ const ScanStation = () => {
                   }}
                 />
 
-                <Button className="my-2">
-                  Scan not working? Click here to manually input student ID.
+                <Button
+                  onClick={() => {
+                    console.log('Show Manual Input');
+                    setShowManualInput(!showManualInput);
+                  }}
+                  className="z-10 my-2"
+                >
+                  {showManualInput
+                    ? 'Hide Manual Input'
+                    : ' Scan not working? Click here to manually input student ID.'}
                 </Button>
+
+                {showManualInput && (
+                  <div className="w-full">
+                    <Label>Enter Student ID</Label>
+                    <Input
+                      placeholder="Enter Student ID"
+                      onChange={(e) => setStudentID(e.target.value)}
+                    />
+
+                    <div className="my-2 flex w-full justify-end">
+                      <Button
+                        onClick={() => {
+                          if (studentID.length > 0) {
+                            fetchStudentData(studentID);
+                            handleTimeOut(studentID);
+                          }
+                        }}
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid h-full w-[80%] grid-cols-2 border-2">
