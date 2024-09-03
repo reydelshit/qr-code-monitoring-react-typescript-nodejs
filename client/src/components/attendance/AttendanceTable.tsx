@@ -1,16 +1,11 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Button } from '../ui/button';
-import axios from 'axios';
 import {
   MaterialReactTable,
-  MRT_TableInstance,
   useMaterialReactTable,
   type MRT_ColumnDef,
   type MRT_RowSelectionState,
 } from 'material-react-table';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
-import useSWR from 'swr';
 
 interface Attendance {
   attendance_id: string;
@@ -29,14 +24,61 @@ const AttendanceTable = ({ attendance }: { attendance: Attendance[] }) => {
       },
 
       {
-        accessorKey: 'timeIn',
-        header: 'Time In',
-        Cell: ({ cell }) => moment(cell.getValue<string>()).format('LLLL'),
+        id: 'Log_Date',
+        header: 'Log Date',
+        Cell: ({ cell }) => moment(cell.getValue<string>()).format('LL'),
       },
       {
-        accessorKey: 'timeOut',
-        header: 'Time Out',
-        Cell: ({ cell }) => moment(cell.getValue<string>()).format('LLLL'),
+        id: 'arrival_time',
+        header: 'Arrival Time',
+        Cell: ({ row }) => {
+          const timeIn = row.original.timeIn;
+
+          if (timeIn) {
+            return moment(timeIn).format('LT');
+          }
+        },
+      },
+
+      {
+        id: 'status',
+        header: 'Status',
+        Cell: ({ row }) => {
+          const timeIn = row.original.timeIn;
+          if (timeIn !== 'n/a' && timeIn !== null) {
+            return 'Enter the campus';
+          }
+        },
+      },
+      {
+        id: 'exit_time',
+        header: 'Departure Time',
+        Cell: ({ row }) => {
+          const timeOut = row.original.timeOut;
+
+          if (
+            timeOut !== 'n/a' &&
+            timeOut !== null &&
+            timeOut !== 'Invalid date'
+          ) {
+            return moment(timeOut).format('LT');
+          } else {
+            return 'Not yet time out';
+          }
+        },
+      },
+
+      {
+        id: 'status',
+        header: 'Status',
+        Cell: ({ row }) => {
+          const timeOut = row.original.timeOut;
+          if (timeOut !== 'n/a' && timeOut !== null) {
+            return 'Exit the campus';
+          } else {
+            return 'N/A';
+          }
+        },
       },
     ],
     [],

@@ -75,6 +75,10 @@ const ScanStation = () => {
     mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/attendance`, fetcher);
 
+  useEffect(() => {
+    console.log(attendance);
+  }, [attendance]);
+
   const fetchStudentData = async (student_id: string) => {
     try {
       await axios
@@ -324,23 +328,27 @@ const ScanStation = () => {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {attendance?.map((entry, index) => {
-                            return (
-                              <TableRow key={index}>
-                                <TableCell className="font-medium">
-                                  {entry.student_id_code}
-                                </TableCell>
-                                <TableCell>
-                                  {moment(entry.timeIn).format('LLLL')}
-                                </TableCell>
-                                <TableCell>
-                                  {entry.timeOut === 'n/a'
-                                    ? 'Not yet set'
-                                    : moment(entry.timeOut).format('LLLL')}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
+                          {attendance
+                            ?.filter((today) =>
+                              moment(today.timeIn).isSame(moment(), 'day'),
+                            )
+                            .map((entry, index) => {
+                              return (
+                                <TableRow key={index}>
+                                  <TableCell className="font-medium">
+                                    {entry.student_id_code}
+                                  </TableCell>
+                                  <TableCell>
+                                    {moment(entry.timeIn).format('LLLL')}
+                                  </TableCell>
+                                  <TableCell>
+                                    {entry.timeOut === 'n/a'
+                                      ? 'Not yet set'
+                                      : moment(entry.timeOut).format('LLLL')}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
                         </TableBody>
                       </Table>
                     </div>
@@ -479,23 +487,27 @@ const ScanStation = () => {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {attendance?.map((entry, index) => {
-                          return (
-                            <TableRow key={index}>
-                              <TableCell className="font-medium">
-                                {entry.student_id_code}
-                              </TableCell>
-                              <TableCell>
-                                {moment(entry.timeIn).format('LLLL')}
-                              </TableCell>
-                              <TableCell>
-                                {entry.timeOut === 'n/a'
-                                  ? 'Not yet set'
-                                  : moment(entry.timeOut).format('LLLL')}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
+                        {attendance
+                          ?.filter((today) =>
+                            moment(today.timeIn).isSame(moment(), 'day'),
+                          )
+                          .map((entry, index) => {
+                            return (
+                              <TableRow key={index}>
+                                <TableCell className="font-medium">
+                                  {entry.student_id_code}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(entry.timeIn).format('LLLL')}
+                                </TableCell>
+                                <TableCell>
+                                  {entry.timeOut === 'n/a'
+                                    ? 'Not yet set'
+                                    : moment(entry.timeOut).format('LLLL')}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                       </TableBody>
                     </Table>
                   </div>
