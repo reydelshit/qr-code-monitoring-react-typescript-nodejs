@@ -14,7 +14,7 @@ import moment from 'moment';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { CircleHelp, QrCode } from 'lucide-react';
+import { ChartNoAxesGantt, CircleHelp, QrCode } from 'lucide-react';
 import usePagination from '@/hooks/usePagination';
 import PaginationTemplate from '../Pagination';
 
@@ -151,23 +151,42 @@ const TimeIn: React.FC<TimeInType> = ({
           )}
 
           <div className="h-full w-full rounded-xl border-[1px] px-2">
-            <h1 className="my-5 font-semibold">Todays Entries</h1>
+            <div className="my-5 flex items-center justify-between">
+              <span>
+                <h1 className="font-semibold">Today's Attendance</h1>
+                <span className="text-[12px]">
+                  {filteredAttendance?.length} students attended today.
+                </span>
+              </span>
+
+              <span className="flex flex-col font-medium">
+                <p className="flex">
+                  {' '}
+                  See more <ChartNoAxesGantt />
+                </p>
+              </span>
+            </div>
 
             <div>
+              <p className="text-[12px] font-semibold">
+                Only shows 10 per page
+              </p>
               <Table>
                 <TableCaption>A list of todays attendance.</TableCaption>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Student ID</TableHead>
+                    <TableHead>No.</TableHead>
+                    <TableHead className="w-[100px]">Student ID</TableHead>
                     <TableHead>Time In</TableHead>
                     <TableHead>Time Out</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody className="text-[12px]">
+                <TableBody className="h-[1rem] text-[12px]">
                   {currentItems.map((entry, index) => {
                     return (
                       <TableRow key={index}>
-                        <TableCell className="text-sm font-medium">
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell className="text-sm font-semibold">
                           {entry.student_id_code}
                         </TableCell>
                         <TableCell className="text-[12px]">
