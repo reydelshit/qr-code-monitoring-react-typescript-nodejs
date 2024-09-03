@@ -10,6 +10,8 @@ import TimeOut from '@/components/scan-station/TimeOut';
 import { Attendance } from '@/types/scan-station';
 import { Student } from '@/types/scan-station';
 import usePagination from '@/hooks/usePagination';
+import ReactiveTime from '@/components/ReactiveTime';
+import { AlarmClock } from 'lucide-react';
 
 const ScanStation = () => {
   const [studentID, setStudentID] = useState('');
@@ -19,6 +21,9 @@ const ScanStation = () => {
   >([]);
   const [showManualInput, setShowManualInput] = useState(false);
   const { toast } = useToast();
+  const [timeNow, setTimeNow] = useState(
+    moment().format('YYYY-MM-DD HH:mm:ss'),
+  );
 
   const fetcher = async (url: string): Promise<Attendance[]> => {
     const response = await fetch(url);
@@ -37,7 +42,8 @@ const ScanStation = () => {
 
   useEffect(() => {
     console.log(attendance);
-  }, [attendance]);
+    setTimeNow(moment().format('YYYY-MM-DD HH:mm:ss'));
+  }, [timeNow]);
 
   const fetchStudentData = async (student_id: string) => {
     try {
@@ -127,8 +133,8 @@ const ScanStation = () => {
       <h1 className="my-4 text-6xl font-bold">Scan Station</h1>
 
       <div className="flex h-full w-full flex-col items-center">
-        <h1 className="w-full px-4 text-end text-2xl font-bold">
-          {moment().format('LLLL')}
+        <h1 className="flex w-full items-center justify-end gap-2 px-4 text-end text-2xl font-semibold">
+          <AlarmClock size={30} /> <ReactiveTime />
         </h1>
 
         <Tabs

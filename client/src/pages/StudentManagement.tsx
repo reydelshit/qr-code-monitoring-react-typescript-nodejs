@@ -21,6 +21,7 @@ import useSWR from 'swr';
 import usePagination from '@/hooks/usePagination';
 import PaginationTemplate from '@/components/Pagination';
 import { Input } from '@/components/ui/input';
+import { UserRoundPen, UserRoundSearch, UserX } from 'lucide-react';
 
 const StudentManagement = () => {
   const [showStudentForm, setShowStudentForm] = useState(false);
@@ -53,7 +54,7 @@ const StudentManagement = () => {
 
   const { currentItems, totalPages, currentPage, handlePageChange } =
     usePagination({
-      itemsPerPage: 1,
+      itemsPerPage: 10,
       data: filteredStudents,
     });
 
@@ -89,7 +90,7 @@ const StudentManagement = () => {
 
   return (
     <div className="relative h-full w-full">
-      <h1 className="my-4 text-6xl font-bold">Student Management</h1>
+      <h1 className="my-4 text-6xl font-bold">Manage Student</h1>
       <div className="mt-[2rem] h-full w-full">
         <div className="flex justify-between p-2">
           <Input
@@ -102,7 +103,6 @@ const StudentManagement = () => {
               setShowStudentForm(true);
               console.log('clicked');
             }}
-            className="bg-green-500 text-white"
           >
             Create Student
           </Button>
@@ -111,6 +111,14 @@ const StudentManagement = () => {
         {isLoading && <p>Loading...</p>}
         {error && <p>Error: {error}</p>}
 
+        <div className="mx-2 mt-2 flex justify-between">
+          <p className="text-sm">
+            Showing {currentItems.length} of {students.length} students.
+          </p>
+          <p className="text-sm">
+            {currentItems.length} number of students registed in the system.
+          </p>
+        </div>
         <Table className="my-4 w-full">
           <TableCaption>A list of registered students.</TableCaption>
           <TableHeader>
@@ -156,26 +164,29 @@ const StudentManagement = () => {
                   <TableCell>{student.student_gender}</TableCell>
                   <TableCell>
                     <div className="flex items-center justify-center gap-2">
-                      <Button className="bg-green-500 text-white">
-                        <Link to={`/student-management/${student.student_id}`}>
-                          View
+                      <Button className="">
+                        <Link
+                          className="flex gap-1"
+                          to={`/student-management/${student.student_id}`}
+                        >
+                          <UserRoundSearch size={20} /> View
                         </Link>
                       </Button>
                       <Button
                         onClick={() => {
                           handleEdit(student.student_id);
                         }}
-                        className="bg-blue-500 text-white"
+                        className="flex gap-1"
                       >
-                        Edit
+                        <UserRoundPen size={20} /> Edit
                       </Button>
                       <Button
                         onClick={() => {
                           handleDelete(student.student_id);
                         }}
-                        className="bg-red-500 text-white"
+                        className="flex gap-1 bg-red-500 text-white"
                       >
-                        Delete
+                        <UserX size={20} /> Delete
                       </Button>
                     </div>
                   </TableCell>

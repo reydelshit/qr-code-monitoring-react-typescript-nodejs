@@ -42,7 +42,7 @@ const PaginationTemplate = ({
                   href="#"
                   className={`mx-1 ${
                     currentPage === pageNumber
-                      ? 'bg-blue-500 text-white'
+                      ? 'bg-black text-white'
                       : 'bg-gray-200'
                   }`}
                   onClick={() => handlePageChange(pageNumber)}
