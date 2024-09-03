@@ -3,6 +3,14 @@ import { Toaster } from '@/components/ui/toaster';
 import Dashboard from '@/pages/Dashboard';
 import { useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import {
+  ChartBarBig,
+  LayoutGrid,
+  MailCheck,
+  QrCode,
+  ScrollText,
+  UserCog,
+} from 'lucide-react';
 
 const Root = () => {
   const params = useLocation();
@@ -17,46 +25,78 @@ const Root = () => {
   return (
     <div className="flex h-dvh w-dvw items-center justify-center overflow-y-hidden">
       <div className="mx-auto flex h-full w-full gap-4">
-        <div className="relative flex h-screen w-[250px] flex-col border-r-[1px] p-2 pt-[4rem]">
-          <Link
-            className={`p-2 hover:text-red-500 ${params.pathname === '/' ? 'bg-orange-500 text-white' : ''}`}
-            to="/"
+        <div className="relative flex h-screen w-[250px] flex-col gap-2 border-r-[1px] p-2 pt-[4rem]">
+          <Button
+            variant={'outline'}
+            className={`border-none p-2 ${params.pathname === '/' ? 'bg-black text-white' : ''}`}
           >
-            Dashboard
-          </Link>
+            <Link
+              className="text-md flex w-full items-center justify-start"
+              to="/"
+            >
+              {' '}
+              <LayoutGrid className="mr-2 w-[1.2rem]" /> Dashboard
+            </Link>
+          </Button>
 
-          <Link
-            className={`p-2 hover:text-red-500 ${params.pathname === '/student-management' ? 'bg-orange-500 text-white' : ''}`}
-            to="/student-management"
+          <Button
+            variant={'outline'}
+            className={`border-none p-2 ${params.pathname === '/student-management' ? 'bg-black text-white' : ''}`}
           >
-            Students
-          </Link>
+            <Link
+              className="text-md flex w-full items-center justify-start"
+              to="/student-management"
+            >
+              <UserCog className="mr-2 w-[1.2rem]" /> Students
+            </Link>
+          </Button>
 
-          <Link
-            className={`p-2 hover:text-red-500 ${params.pathname === '/message' ? 'bg-orange-500 text-white' : ''}`}
-            to="/message"
+          <Button
+            variant={'outline'}
+            className={`border-none p-2 ${params.pathname === '/message' ? 'bg-black text-white' : ''}`}
           >
-            Messages
-          </Link>
+            <Link
+              className="text-md flex w-full items-center justify-start"
+              to="/message"
+            >
+              <MailCheck className="mr-2 w-[1.2rem]" /> Message
+            </Link>
+          </Button>
 
-          <Link
-            className={`p-2 hover:text-red-500 ${params.pathname === '/attendance-log' ? 'bg-orange-500 text-white' : ''}`}
-            to="/attendance-log"
+          <Button
+            variant={'outline'}
+            className={`border-none p-2 ${params.pathname === '/attendance-log' ? 'bg-black text-white' : ''}`}
           >
-            Attendance
-          </Link>
-          <Link
-            className={`p-2 hover:text-red-500 ${params.pathname === '/Reports' ? 'bg-orange-500 text-white' : ''}`}
-            to="/Reports"
+            <Link
+              className="text-md flex w-full items-center justify-start"
+              to="/attendance-log"
+            >
+              <ScrollText className="mr-2 w-[1.2rem]" /> Attendance
+            </Link>
+          </Button>
+          <Button
+            variant={'outline'}
+            className={`border-none p-2 ${params.pathname === '/Reports' ? 'bg-black text-white' : ''}`}
           >
-            Reports
-          </Link>
-          <Link
-            className={`p-2 hover:text-red-500 ${params.pathname === '/ScanStation' ? 'bg-orange-500 text-white' : ''}`}
-            to="/ScanStation"
+            <Link
+              className="text-md flex w-full items-center justify-start"
+              to="/Reports"
+            >
+              <ChartBarBig className="mr-2 w-[1.2rem]" /> Reports
+            </Link>
+          </Button>
+          <Button
+            variant={'outline'}
+            className={`border-none p-2 ${params.pathname === '/ScanStation' ? 'bg-black text-white' : ''}`}
           >
-            Scan Station
-          </Link>
+            <Link
+              className="text-md flex w-full items-center justify-start"
+              to="/ScanStation"
+            >
+              {' '}
+              <QrCode className="mr-2 w-[1.2rem]" /> Scan Station
+            </Link>
+          </Button>
 
           {/* <Button
             onClick={() => setShowSidebar(!showSidebar)}
