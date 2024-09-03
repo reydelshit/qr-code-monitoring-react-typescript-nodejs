@@ -30,6 +30,8 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
+import usePagination from '@/hooks/usePagination';
+import PaginationTemplate from '@/components/Pagination';
 
 interface Attendance extends Record<string, React.ReactNode> {
   attendance_id: string;
@@ -41,8 +43,6 @@ interface Attendance extends Record<string, React.ReactNode> {
 
 const AttendanceLog = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(2);
 
   const fetcher = async (url: string): Promise<Attendance[]> => {
     const response = await fetch(url);
@@ -59,25 +59,17 @@ const AttendanceLog = () => {
     mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/attendance`, fetcher);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
   const filteredAttendance = attendance.filter((data) =>
     date !== undefined
       ? moment(data.timeIn).format('LL') === moment(date).format('LL')
       : data,
   );
 
-  const currentItems = filteredAttendance.slice(
-    indexOfFirstItem,
-    indexOfLastItem,
-  );
-
-  const totalPages = Math.ceil(filteredAttendance.length / itemsPerPage);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const { currentItems, totalPages, currentPage, handlePageChange } =
+    usePagination({
+      itemsPerPage: 2,
+      data: filteredAttendance,
+    });
 
   return (
     <div>
@@ -155,54 +147,11 @@ const AttendanceLog = () => {
           </TableBody>
         </Table>
 
-        <div>
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  className="cursor-pointer"
-                  onClick={() =>
-                    currentPage === 1
-                      ? handlePageChange(totalPages)
-                      : handlePageChange(currentPage - 1)
-                  }
-                />
-              </PaginationItem>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (pageNumber) => (
-                  <PaginationItem key={pageNumber}>
-                    <PaginationLink
-                      href="#"
-                      className={`mx-1 ${
-                        currentPage === pageNumber
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200'
-                      }`}
-                      onClick={() => handlePageChange(pageNumber)}
-                    >
-                      {pageNumber}
-                    </PaginationLink>
-                  </PaginationItem>
-                ),
-              )}
-
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={() =>
-                    currentPage === totalPages
-                      ? handlePageChange(1)
-                      : handlePageChange(currentPage + 1)
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <PaginationTemplate
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
 
         {/* <AttendanceTable attendance={attendance} /> */}
       </div>

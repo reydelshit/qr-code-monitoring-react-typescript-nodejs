@@ -18,12 +18,16 @@ import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
+import usePagination from '@/hooks/usePagination';
+import PaginationTemplate from '@/components/Pagination';
+import { Input } from '@/components/ui/input';
 
 const StudentManagement = () => {
   const [showStudentForm, setShowStudentForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [studentID, setStudentID] = useState('');
   const { toast } = useToast();
+  const [search, setSearch] = useState('');
 
   const fetcher = async (url: string): Promise<Student[]> => {
     const response = await fetch(url);
@@ -34,13 +38,24 @@ const StudentManagement = () => {
   };
 
   const {
-    data: students,
+    data: students = [],
     error,
     isLoading,
     mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/student`, fetcher);
 
-  console.log(students);
+  const filteredStudents = students.filter((student) => {
+    return (
+      student.student_name.toLowerCase().includes(search.toLowerCase()) ||
+      student.student_id_code.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
+  const { currentItems, totalPages, currentPage, handlePageChange } =
+    usePagination({
+      itemsPerPage: 1,
+      data: filteredStudents,
+    });
 
   const handleDelete = (student_id: string) => {
     axios
@@ -75,8 +90,13 @@ const StudentManagement = () => {
   return (
     <div className="relative h-full w-full">
       <h1 className="my-4 text-6xl font-bold">Student Management</h1>
-      <div className="h-full w-full">
-        <div className="flex justify-end p-2">
+      <div className="mt-[2rem] h-full w-full">
+        <div className="flex justify-between p-2">
+          <Input
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-[20rem]"
+            placeholder="Search student.."
+          />
           <Button
             onClick={() => {
               setShowStudentForm(true);
@@ -105,7 +125,7 @@ const StudentManagement = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {students?.map((student, index) => {
+            {currentItems?.map((student, index) => {
               return (
                 <TableRow key={index}>
                   <TableCell>
@@ -164,6 +184,11 @@ const StudentManagement = () => {
             })}
           </TableBody>
         </Table>
+        <PaginationTemplate
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
       </div>
 
       {showStudentForm && (
