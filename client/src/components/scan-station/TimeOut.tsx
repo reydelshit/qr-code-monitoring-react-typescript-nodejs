@@ -25,9 +25,8 @@ interface TimeOutType {
   studentID: string;
   setStudentID: (studentID: string) => void;
   student: Student;
-  fetchStudentData: (studentID: string) => void;
+  fetchStudentData: (studentID: string, type: string) => void;
   attendance: Attendance[];
-  handleTimeOut: (studentID: string) => void;
   showManualInput: boolean;
   setShowManualInput: (showManualInput: boolean) => void;
   fetchAttendanceForTimeout: (studentID: string) => void;
@@ -38,7 +37,6 @@ const TimeOut: React.FC<TimeOutType> = ({
   student,
   fetchStudentData,
   attendance,
-  handleTimeOut,
   showManualInput,
   setShowManualInput,
   fetchAttendanceForTimeout,
@@ -69,10 +67,8 @@ const TimeOut: React.FC<TimeOutType> = ({
               onScan={(result: IDetectedBarcode[]) => {
                 console.log('Student ID:', result[0].rawValue);
 
-                fetchStudentData(result[0].rawValue);
+                fetchStudentData(result[0].rawValue, 'time-out');
                 fetchAttendanceForTimeout(result[0].rawValue);
-
-                handleTimeOut(result[0].rawValue);
               }}
             />
 
@@ -103,8 +99,7 @@ const TimeOut: React.FC<TimeOutType> = ({
                   <Button
                     onClick={() => {
                       if (studentID.length > 0) {
-                        fetchStudentData(studentID);
-                        handleTimeOut(studentID);
+                        fetchStudentData(studentID, 'time-out');
                       }
                     }}
                   >

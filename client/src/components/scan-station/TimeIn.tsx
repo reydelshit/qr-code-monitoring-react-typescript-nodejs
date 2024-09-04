@@ -8,23 +8,23 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import usePagination from '@/hooks/usePagination';
 import { Attendance, IDetectedBarcode, Student } from '@/types/scan-station';
 import { Scanner } from '@yudiel/react-qr-scanner';
+import { ChartNoAxesGantt, CircleHelp, QrCode } from 'lucide-react';
 import moment from 'moment';
+import PaginationTemplate from '../Pagination';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { ChartNoAxesGantt, CircleHelp, QrCode } from 'lucide-react';
-import usePagination from '@/hooks/usePagination';
-import PaginationTemplate from '../Pagination';
 
 interface TimeInType {
   studentID: string;
   setStudentID: (studentID: string) => void;
   student: Student;
-  fetchStudentData: (studentID: string) => void;
+  fetchStudentData: (studentID: string, type: string) => void;
   attendance: Attendance[];
-  handleTimeIn: (studentID: string) => void;
+  // handleTimeIn: (studentID: string) => void;
   showManualInput: boolean;
   setShowManualInput: (showManualInput: boolean) => void;
 }
@@ -35,7 +35,7 @@ const TimeIn: React.FC<TimeInType> = ({
   student,
   fetchStudentData,
   attendance,
-  handleTimeIn,
+  // handleTimeIn,
   showManualInput,
   setShowManualInput,
 }) => {
@@ -60,10 +60,21 @@ const TimeIn: React.FC<TimeInType> = ({
           <Scanner
             allowMultiple={false}
             onScan={(result: IDetectedBarcode[]) => {
-              console.log('Student ID:', result[0].rawValue);
+              if (!result || result.length === 0) {
+                console.warn('No barcode detected.');
+                return;
+              }
 
-              fetchStudentData(result[0].rawValue);
-              handleTimeIn(result[0].rawValue);
+              const studentId = result[0].rawValue;
+              console.log('Student ID:', studentId);
+
+              try {
+                fetchStudentData(studentId, 'time-in');
+
+                // handleTimeIn(studentId);
+              } catch (error) {
+                console.error('Error fetching student data:', error);
+              }
             }}
           />
 
@@ -94,8 +105,8 @@ const TimeIn: React.FC<TimeInType> = ({
                 <Button
                   onClick={() => {
                     if (studentID.length > 0) {
-                      fetchStudentData(studentID);
-                      handleTimeIn(studentID);
+                      fetchStudentData(studentID, 'time-in');
+                      // handleTimeIn(studentID);
                     }
                   }}
                 >

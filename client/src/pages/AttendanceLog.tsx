@@ -43,6 +43,7 @@ interface Attendance extends Record<string, React.ReactNode> {
 
 const AttendanceLog = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [search, setSearch] = useState('');
 
   const fetcher = async (url: string): Promise<Attendance[]> => {
     const response = await fetch(url);
@@ -59,24 +60,35 @@ const AttendanceLog = () => {
     mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/attendance`, fetcher);
 
-  const filteredAttendance = attendance.filter((data) =>
-    date !== undefined
-      ? moment(data.timeIn).format('LL') === moment(date).format('LL')
-      : data,
-  );
+  const filteredAttendance = attendance
+    .filter((data) =>
+      date !== undefined
+        ? moment(data.timeIn).format('LL') === moment(date).format('LL')
+        : data,
+    )
+    .filter((data) =>
+      data.student_id_code.toLowerCase().includes(search.toLowerCase()),
+    );
 
   const { currentItems, totalPages, currentPage, handlePageChange } =
     usePagination({
-      itemsPerPage: 2,
+      itemsPerPage: 15,
       data: filteredAttendance,
     });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
 
   return (
     <div>
       <h1 className="my-4 text-6xl font-bold">Attendance</h1>
 
       <div className="mt-[2rem] flex h-[2.5rem] justify-between pr-4">
-        <Input className="h-full w-[20rem]" placeholder="Search student.." />
+        <Input
+          onChange={(e) => setSearch(e.target.value)}
+          className="h-full w-[20rem]"
+          placeholder="Search student.."
+        />
 
         <Popover>
           <PopoverTrigger asChild>
@@ -100,6 +112,8 @@ const AttendanceLog = () => {
         </Popover>
       </div>
       <div className="mt-[2rem]">
+        <h1 className="my-2 font-semibold">Only shows 15 per page</h1>
+
         <Table>
           <TableCaption>A list of attendance log.</TableCaption>
           <TableHeader>
