@@ -7,6 +7,7 @@ import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
 import { studentRouter } from './api/studentRoute';
 import { attendanceRouter } from './api/attendanceRoute';
 import { messageRouter } from './api/messagesRoute';
+import { dashboardRouter } from './api/dashboardRoute';
 
 
 
@@ -83,6 +84,7 @@ app.get('/protected', authenticateToken, (req: AuthenticatedRequest, res) => {
 app.use("/student", studentRouter);
 app.use("/attendance", attendanceRouter);
 app.use("/messages", messageRouter);
+app.use("/dashboard", dashboardRouter);
 
 
 
