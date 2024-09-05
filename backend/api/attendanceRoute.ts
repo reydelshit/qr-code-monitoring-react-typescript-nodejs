@@ -115,27 +115,7 @@ router.get("/:id", (req, res) => {
   
   
 
-  router.post("/upload-message", (req, res) => {
-    const query = `INSERT INTO messages (student_id, content, dateSent) VALUES (?)`;
-
-    const value = [
-      req.body.student_id,
-      req.body.content,
-      req.body.dateSent
-    ]
-
-    databaseConnection.query(query, [value], (err, data) => {
-      if (err) {
-        console.error('SQL Error:', err);
-        return res.status(500).json({ error: 'Database query failed' });
-      }
-      return res.json({
-        ...data,
-        message: "Successfully added message",
-        status: "success",
-      });
-    })
-  })
+  
 
   
 

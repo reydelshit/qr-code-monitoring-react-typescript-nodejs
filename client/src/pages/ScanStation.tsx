@@ -54,6 +54,7 @@ const ScanStation = () => {
       student_id: student_details.student_id_code,
       content: message,
       dateSent: moment().format('LLLL'),
+      recepientNumber: student_details.student_parent_number,
     });
 
     return fetch('https://api.httpsms.com/v1/messages/send', {
@@ -128,19 +129,21 @@ const ScanStation = () => {
   };
 
   const uploadMessageToDatabase = async (
-    { student_id, content, dateSent } = {} as {
+    { student_id, content, dateSent, recepientNumber } = {} as {
       student_id: string;
       content: string;
       dateSent: string;
+      recepientNumber: string;
     },
   ) => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_SERVER_LINK}/attendance/upload-message`,
+        `${import.meta.env.VITE_SERVER_LINK}/messages/upload-message`,
         {
           student_id,
           content,
           dateSent,
+          recepientNumber,
         },
       );
 
