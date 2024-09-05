@@ -50,6 +50,12 @@ const ScanStation = () => {
       'LLLL',
     )}.`;
 
+    uploadMessageToDatabase({
+      student_id: student_details.student_id_code,
+      content: message,
+      dateSent: moment().format('LLLL'),
+    });
+
     return fetch('https://api.httpsms.com/v1/messages/send', {
       method: 'POST',
       headers: {
@@ -115,6 +121,31 @@ const ScanStation = () => {
               mutate();
             }
           });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const uploadMessageToDatabase = async (
+    { student_id, content, dateSent } = {} as {
+      student_id: string;
+      content: string;
+      dateSent: string;
+    },
+  ) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_SERVER_LINK}/attendance/upload-message`,
+        {
+          student_id,
+          content,
+          dateSent,
+        },
+      );
+
+      if (res.data.status === 'success') {
+        console.log('Message uploaded successfully');
       }
     } catch (error) {
       console.log(error);

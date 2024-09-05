@@ -7,19 +7,8 @@ import { databaseConnection } from '../connections/DatabaseConnection';
 
 const router = Router();
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, path.join(__dirname, '..', 'uploads')); 
-    },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); 
-    }
-  });
-  
-  const upload = multer({ storage });
-  
-  
-  
+
+
   // get all student
   router.get("/", (req, res) => {
     const query = "SELECT * FROM attendance";
@@ -125,23 +114,28 @@ router.get("/:id", (req, res) => {
   });
   
   
-  // DELETE STUDENT 
 
-  router.delete("/delete/:id", (req, res) => {
-    const query = "DELETE FROM students WHERE student_id = ?"
-    const id = req.params.id
-  
-    databaseConnection.query(query, id, (err, data) => {
-        if(err) return res.json(err)
-        return res.json({
+  router.post("/upload-message", (req, res) => {
+    const query = `INSERT INTO messages (student_id, content, dateSent) VALUES (?)`;
+
+    const value = [
+      req.body.student_id,
+      req.body.content,
+      req.body.dateSent
+    ]
+
+    databaseConnection.query(query, [value], (err, data) => {
+      if (err) {
+        console.error('SQL Error:', err);
+        return res.status(500).json({ error: 'Database query failed' });
+      }
+      return res.json({
         ...data,
-        message: "succesfully deleted",
+        message: "Successfully added message",
         status: "success",
-      })
+      });
     })
   })
-  
-  
 
   
 
