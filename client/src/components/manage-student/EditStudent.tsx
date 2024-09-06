@@ -17,6 +17,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
 // import { URL } from 'url';
+import { DialogClose } from '@/components/ui/dialog';
 
 interface StudentFormData {
   student_id: string;
@@ -182,213 +183,201 @@ export default function EditStudent({
   };
 
   return (
-    <div className="relative flex w-[60%] flex-col items-center justify-center rounded-md border-2 bg-white text-center shadow-lg">
-      <span
-        onClick={() => setShowEditForm(false)}
-        className="absolute right-4 top-2 cursor-pointer text-2xl"
-      >
-        x
-      </span>
-      <div className="flex w-full flex-col items-center gap-[1rem] p-2">
-        <form className="w-full px-4 text-start" onSubmit={handleSubmitUpdate}>
-          <div className="flex gap-4">
-            <div className="flex w-[25rem] flex-col">
-              <img
-                className="mb-4 h-[20rem] w-full rounded-lg object-cover"
-                src={
-                  image
-                    ? `${import.meta.env.VITE_SERVER_LINK}/${student.student_image_path}`
-                    : defaultProfile
-                }
-              />
-              <Label className="mb-2 text-start">Student image</Label>
+    <div className="flex w-full flex-col items-center gap-[1rem] p-2">
+      <form className="w-full px-4 text-start" onSubmit={handleSubmitUpdate}>
+        <div className="flex gap-4">
+          <div className="flex w-[25rem] flex-col">
+            <img
+              className="mb-4 h-[20rem] w-full rounded-lg object-cover"
+              src={
+                image
+                  ? `${import.meta.env.VITE_SERVER_LINK}/${student.student_image_path}`
+                  : defaultProfile
+              }
+            />
+            <Label className="mb-2 text-start">Student image</Label>
 
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleChangeImage}
-                className="cursor-pointer"
-              />
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleChangeImage}
+              className="cursor-pointer"
+            />
 
-              <div className="mt-4 w-full">
-                {' '}
-                <QRCode
-                  size={15}
-                  style={{
-                    height: 'auto',
-                    maxWidth: '100%',
-                    width: '100%',
-                  }}
-                  value={student.student_id_code || '0'}
-                  viewBox={`0 0 256 256`}
+            <div className="mt-4 w-full">
+              {' '}
+              <QRCode
+                size={15}
+                style={{
+                  height: 'auto',
+                  maxWidth: '100%',
+                  width: '100%',
+                }}
+                value={student.student_id_code || '0'}
+                viewBox={`0 0 256 256`}
+              />
+            </div>
+          </div>
+
+          <div className="w-full">
+            <Label className="my-2 block text-2xl">Basic Information</Label>
+            <div className="flex w-full items-end gap-4">
+              <div className="w-full">
+                <Label className="mb-2 text-start">Student ID</Label>
+                <Input
+                  name="student_id_code"
+                  className="mb-2 w-[100%]"
+                  onChange={handleChange}
+                  defaultValue={student.student_id_code}
                 />
               </div>
             </div>
+            <div className="flex gap-4">
+              <div className="w-full">
+                <Label className="mb-2 text-start">Full Name</Label>
+                <Input
+                  name="student_name"
+                  className="mb-2"
+                  onChange={handleChange}
+                  defaultValue={student.student_name}
+                />
+              </div>
+            </div>
+            <div className="item-start flex flex-col">
+              <Label className="mb-2 text-start">
+                Date of Birth{' '}
+                <span className="font-bold underline">
+                  ({student.student_datebirth})
+                </span>
+              </Label>
+              <Input
+                type="date"
+                name="student_datebirth"
+                className="mb-2"
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-full">
+                <Label className="mb-2 text-start">Address</Label>
+                <Input
+                  name="student_address"
+                  className="mb-2"
+                  onChange={handleChange}
+                  defaultValue={student.student_address}
+                />
+              </div>
+
+              <div className="mb-[2rem] w-full text-start">
+                <Label className="mb-2">
+                  Gender
+                  <span>({student.student_gender})</span>
+                </Label>
+
+                <Select value={selectedGender} onValueChange={handleGender}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Male">Male</SelectItem>
+                    <SelectItem value="Female">Female</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <Label className="my-2 block text-2xl">Program Information</Label>
 
             <div className="w-full">
-              <Label className="my-2 block text-2xl">Basic Information</Label>
-              <div className="flex w-full items-end gap-4">
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Student ID</Label>
-                  <Input
-                    name="student_id_code"
-                    className="mb-2 w-[100%]"
-                    onChange={handleChange}
-                    defaultValue={student.student_id_code}
-                  />
-                </div>
+              <Label className="mb-2 text-start">Program</Label>
+              <Input
+                name="student_program"
+                className="mb-2"
+                onChange={handleChange}
+                defaultValue={student.student_program}
+              />
+            </div>
+            <div className="flex gap-4">
+              <div className="w-full">
+                <Label className="mb-2 text-start">Grade Level</Label>
+                <Input
+                  name="student_grade_level"
+                  className="mb-2"
+                  onChange={handleChange}
+                  defaultValue={student.student_grade_level}
+                />
               </div>
-              <div className="flex gap-4">
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Full Name</Label>
-                  <Input
-                    name="student_name"
-                    className="mb-2"
-                    onChange={handleChange}
-                    defaultValue={student.student_name}
-                  />
-                </div>
+
+              <div className="w-full">
+                <Label className="mb-2 text-start">Block / Section</Label>
+                <Input
+                  name="student_block_section"
+                  className="mb-2"
+                  onChange={handleChange}
+                  defaultValue={student.student_block_section}
+                />
               </div>
-              <div className="item-start flex flex-col">
+            </div>
+
+            <Label className="my-2 block text-2xl">Contact Information</Label>
+
+            <div className="w-full">
+              <Label className="mb-2 text-start">Parent/Guardian Name</Label>
+              <Input
+                name="student_parent_name"
+                className="mb-2"
+                onChange={handleChange}
+                defaultValue={student.student_parent_name}
+              />
+            </div>
+            <div className="flex gap-4">
+              <div className="w-full">
                 <Label className="mb-2 text-start">
-                  Date of Birth{' '}
-                  <span className="font-bold underline">
-                    ({student.student_datebirth})
-                  </span>
+                  Parent/Guardian Phone Number(s)
                 </Label>
                 <Input
-                  type="date"
-                  name="student_datebirth"
+                  name="student_parent_number"
                   className="mb-2"
+                  type="number"
                   onChange={handleChange}
+                  defaultValue={student.student_parent_number}
                 />
               </div>
-
-              <div className="flex gap-4">
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Address</Label>
-                  <Input
-                    name="student_address"
-                    className="mb-2"
-                    onChange={handleChange}
-                    defaultValue={student.student_address}
-                  />
-                </div>
-
-                <div className="mb-[2rem] w-full text-start">
-                  <Label className="mb-2">
-                    Gender
-                    <span>({student.student_gender})</span>
-                  </Label>
-
-                  <Select value={selectedGender} onValueChange={handleGender}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <Label className="my-2 block text-2xl">Program Information</Label>
 
               <div className="w-full">
-                <Label className="mb-2 text-start">Program</Label>
+                <Label className="mb-2 text-start">
+                  Parent/Guardian Email Address (Optional)
+                </Label>
                 <Input
-                  name="student_program"
+                  name="student_parent_email"
                   className="mb-2"
+                  type="email"
                   onChange={handleChange}
-                  defaultValue={student.student_program}
+                  defaultValue={student.student_parent_email}
                 />
-              </div>
-              <div className="flex gap-4">
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Grade Level</Label>
-                  <Input
-                    name="student_grade_level"
-                    className="mb-2"
-                    onChange={handleChange}
-                    defaultValue={student.student_grade_level}
-                  />
-                </div>
-
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Block / Section</Label>
-                  <Input
-                    name="student_block_section"
-                    className="mb-2"
-                    onChange={handleChange}
-                    defaultValue={student.student_block_section}
-                  />
-                </div>
-              </div>
-
-              <Label className="my-2 block text-2xl">Contact Information</Label>
-
-              <div className="w-full">
-                <Label className="mb-2 text-start">Parent/Guardian Name</Label>
-                <Input
-                  name="student_parent_name"
-                  className="mb-2"
-                  onChange={handleChange}
-                  defaultValue={student.student_parent_name}
-                />
-              </div>
-              <div className="flex gap-4">
-                <div className="w-full">
-                  <Label className="mb-2 text-start">
-                    Parent/Guardian Phone Number(s)
-                  </Label>
-                  <Input
-                    name="student_parent_number"
-                    className="mb-2"
-                    type="number"
-                    onChange={handleChange}
-                    defaultValue={student.student_parent_number}
-                  />
-                </div>
-
-                <div className="w-full">
-                  <Label className="mb-2 text-start">
-                    Parent/Guardian Email Address (Optional)
-                  </Label>
-                  <Input
-                    name="student_parent_email"
-                    className="mb-2"
-                    type="email"
-                    onChange={handleChange}
-                    defaultValue={student.student_parent_email}
-                  />
-                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <span className="text-red-500">{error}</span>
+        <span className="text-red-500">{error}</span>
 
-          <div className="my-4 flex justify-end gap-4">
-            <Button
-              onClick={() => {
-                mutate();
-                setShowEditForm(false);
-              }}
-              className="w-[20%] self-center bg-[#585a57] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
-            >
-              Cancel
+        <div className="my-4 flex justify-end gap-4">
+          <DialogClose>
+            <Button onClick={() => mutate()} type="button" variant="secondary">
+              Close
             </Button>
-            <Button
-              disabled={isLoadingSubmission}
-              className="w-[20%] self-center bg-[#41644A] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
-              type="submit"
-            >
-              {isLoadingSubmission ? 'Updating...' : 'Update'}
-            </Button>
-          </div>
-        </form>
-      </div>
+          </DialogClose>
+          <Button
+            disabled={isLoadingSubmission}
+            className="w-[20%] self-center bg-[#41644A] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
+            type="submit"
+          >
+            {isLoadingSubmission ? 'Updating...' : 'Update'}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

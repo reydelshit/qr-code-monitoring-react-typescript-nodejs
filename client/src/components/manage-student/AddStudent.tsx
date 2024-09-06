@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
+import { DialogClose } from '@/components/ui/dialog';
 
 import {
   Select,
@@ -46,6 +47,7 @@ export default function AddStudent({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<StudentFormData>();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -127,6 +129,9 @@ export default function AddStudent({
         });
         setShowStudentForm(false);
         mutate();
+        reset();
+        setImage(null);
+        setSelectedGender('');
       }
     } catch (error) {
       console.error(error);
@@ -142,225 +147,223 @@ export default function AddStudent({
   };
 
   return (
-    <div className="relative flex w-[80%] flex-col items-center justify-center rounded-md border-2 bg-white text-center shadow-lg">
-      <span
-        onClick={() => setShowStudentForm(false)}
-        className="absolute right-4 top-2 cursor-pointer text-2xl"
+    <div className="flex w-full flex-col items-center gap-[1rem] p-2">
+      <form
+        className="w-full px-4 text-start"
+        onSubmit={handleSubmit(onSubmit)}
       >
-        x
-      </span>
-      <div className="flex w-full flex-col items-center gap-[1rem] p-2">
-        <form
-          className="w-full px-4 text-start"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="flex gap-4">
-            <div className="flex w-[25rem] flex-col">
-              <img
-                className="mb-4 h-[20rem] w-full rounded-lg object-cover"
-                src={image! ? image! : defaultProfile}
-              />
-              <Label className="mb-2 text-start">Student image</Label>
+        <div className="flex gap-4">
+          <div className="flex w-[25rem] flex-col">
+            <img
+              className="mb-4 h-[20rem] w-full rounded-lg object-cover"
+              src={image! ? image! : defaultProfile}
+            />
+            <Label className="mb-2 text-start">Student image</Label>
 
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleChangeImage}
+              className="cursor-pointer"
+              required
+            />
+          </div>
+
+          <div className="w-full">
+            <Label className="my-2 block text-2xl">Basic Information</Label>
+            <div className="w-full">
+              <Label className="mb-2 text-start">Student ID</Label>
               <Input
-                type="file"
-                accept="image/*"
-                onChange={handleChangeImage}
-                className="cursor-pointer"
+                className="mb-2"
                 required
+                {...register('student_id_code', {
+                  required: 'Student ID is required',
+                })}
+              />
+              {errors.student_id && <span>{errors.student_id.message}</span>}
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-full">
+                <Label className="mb-2 text-start">First Name</Label>
+                <Input
+                  className="mb-2"
+                  required
+                  {...register('student_firstname', {
+                    required: 'Firstname is required',
+                  })}
+                />
+              </div>
+
+              <div className="w-full">
+                <Label className="mb-2 text-start">Last Name</Label>
+                <Input
+                  className="mb-2"
+                  required
+                  {...register('student_lastname', {
+                    required: 'Lastname is required',
+                  })}
+                />
+              </div>
+
+              <div className="w-full">
+                <Label className="mb-2 text-start">Middle Name</Label>
+                <Input
+                  className="mb-2"
+                  required
+                  {...register('student_middlename', {
+                    required: 'Firstname is required',
+                  })}
+                />
+              </div>
+            </div>
+            <div className="item-start flex flex-col">
+              <Label className="mb-2 text-start">Date of Birth</Label>
+              <Input
+                type="date"
+                className="mb-2"
+                required
+                {...register('student_datebirth', {
+                  required: 'student_datebirth is required',
+                })}
               />
             </div>
+
+            <div className="flex gap-4">
+              <div className="w-full">
+                <Label className="mb-2 text-start">Address</Label>
+                <Input
+                  className="mb-2"
+                  required
+                  {...register('student_address', {
+                    required: 'student_address is required',
+                  })}
+                />
+              </div>
+
+              <div className="mb-[2rem] w-full text-start">
+                <Label className="mb-2">Gender</Label>
+
+                <Select
+                  required
+                  value={selectedGender}
+                  onValueChange={handleGender}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Male">Male</SelectItem>
+                    <SelectItem value="Female">Female</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <Label className="my-2 block text-2xl">Program Information</Label>
 
             <div className="w-full">
-              <Label className="my-2 block text-2xl">Basic Information</Label>
+              <Label className="mb-2 text-start">Program</Label>
+              <Input
+                className="mb-2"
+                required
+                {...register('student_program', {
+                  required: 'student_program is required',
+                })}
+              />
+            </div>
+            <div className="flex gap-4">
               <div className="w-full">
-                <Label className="mb-2 text-start">Student ID</Label>
+                <Label className="mb-2 text-start">Grade Level</Label>
                 <Input
                   className="mb-2"
                   required
-                  {...register('student_id_code', {
-                    required: 'Student ID is required',
-                  })}
-                />
-                {errors.student_id && <span>{errors.student_id.message}</span>}
-              </div>
-
-              <div className="flex gap-4">
-                <div className="w-full">
-                  <Label className="mb-2 text-start">First Name</Label>
-                  <Input
-                    className="mb-2"
-                    required
-                    {...register('student_firstname', {
-                      required: 'Firstname is required',
-                    })}
-                  />
-                </div>
-
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Last Name</Label>
-                  <Input
-                    className="mb-2"
-                    required
-                    {...register('student_lastname', {
-                      required: 'Lastname is required',
-                    })}
-                  />
-                </div>
-
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Middle Name</Label>
-                  <Input
-                    className="mb-2"
-                    required
-                    {...register('student_middlename', {
-                      required: 'Firstname is required',
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="item-start flex flex-col">
-                <Label className="mb-2 text-start">Date of Birth</Label>
-                <Input
-                  type="date"
-                  className="mb-2"
-                  required
-                  {...register('student_datebirth', {
-                    required: 'student_datebirth is required',
+                  {...register('student_grade_level', {
+                    required: 'student_grade_level is required',
                   })}
                 />
               </div>
-
-              <div className="flex gap-4">
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Address</Label>
-                  <Input
-                    className="mb-2"
-                    required
-                    {...register('student_address', {
-                      required: 'student_address is required',
-                    })}
-                  />
-                </div>
-
-                <div className="mb-[2rem] w-full text-start">
-                  <Label className="mb-2">Gender</Label>
-
-                  <Select
-                    required
-                    value={selectedGender}
-                    onValueChange={handleGender}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <Label className="my-2 block text-2xl">Program Information</Label>
 
               <div className="w-full">
-                <Label className="mb-2 text-start">Program</Label>
+                <Label className="mb-2 text-start">Block / Section</Label>
                 <Input
                   className="mb-2"
                   required
-                  {...register('student_program', {
-                    required: 'student_program is required',
+                  {...register('student_block_section', {
+                    required: 'student_block_section is required',
                   })}
                 />
               </div>
-              <div className="flex gap-4">
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Grade Level</Label>
-                  <Input
-                    className="mb-2"
-                    required
-                    {...register('student_grade_level', {
-                      required: 'student_grade_level is required',
-                    })}
-                  />
-                </div>
+            </div>
 
-                <div className="w-full">
-                  <Label className="mb-2 text-start">Block / Section</Label>
-                  <Input
-                    className="mb-2"
-                    required
-                    {...register('student_block_section', {
-                      required: 'student_block_section is required',
-                    })}
-                  />
-                </div>
+            <Label className="my-2 block text-2xl">Contact Information</Label>
+
+            <div className="w-full">
+              <Label className="mb-2 text-start">Parent/Guardian Name</Label>
+              <Input
+                className="mb-2"
+                required
+                {...register('student_parent_name', {
+                  required: 'student_parent_name is required',
+                })}
+              />
+            </div>
+            <div className="flex gap-4">
+              <div className="w-full">
+                <Label className="mb-2 text-start">
+                  Parent/Guardian Phone Number(s)
+                </Label>
+                <Input
+                  className="mb-2"
+                  required
+                  type="number"
+                  {...register('student_parent_number', {
+                    required: 'student_parent_number is required',
+                  })}
+                />
               </div>
-
-              <Label className="my-2 block text-2xl">Contact Information</Label>
 
               <div className="w-full">
-                <Label className="mb-2 text-start">Parent/Guardian Name</Label>
+                <Label className="mb-2 text-start">
+                  Parent/Guardian Email Address (Optional)
+                </Label>
                 <Input
                   className="mb-2"
+                  type="email"
                   required
-                  {...register('student_parent_name', {
-                    required: 'student_parent_name is required',
+                  {...register('student_parent_email', {
+                    required: 'student_parent_email is required',
                   })}
                 />
-              </div>
-              <div className="flex gap-4">
-                <div className="w-full">
-                  <Label className="mb-2 text-start">
-                    Parent/Guardian Phone Number(s)
-                  </Label>
-                  <Input
-                    className="mb-2"
-                    required
-                    type="number"
-                    {...register('student_parent_number', {
-                      required: 'student_parent_number is required',
-                    })}
-                  />
-                </div>
-
-                <div className="w-full">
-                  <Label className="mb-2 text-start">
-                    Parent/Guardian Email Address (Optional)
-                  </Label>
-                  <Input
-                    className="mb-2"
-                    type="email"
-                    required
-                    {...register('student_parent_email', {
-                      required: 'student_parent_email is required',
-                    })}
-                  />
-                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <span className="text-red-500">{error}</span>
+        <span className="text-red-500">{error}</span>
 
-          <div className="my-4 flex justify-end gap-4">
-            <Button
-              onClick={() => setShowStudentForm(false)}
-              className="w-[20%] self-center bg-[#585a57] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
-            >
-              Cancel
+        <div className="my-4 flex justify-end gap-4">
+          {/* <Button
+            onClick={() => setShowStudentForm(false)}
+            className="w-[20%] self-center bg-[#585a57] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
+          >
+            Cancel
+          </Button> */}
+
+          <DialogClose>
+            <Button type="button" variant="secondary">
+              Close
             </Button>
-            <Button
-              disabled={isLoading}
-              className="w-[20%] self-center bg-[#41644A] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
-              type="submit"
-            >
-              {isLoading ? 'Submitting...' : 'Submit'}
-            </Button>
-          </div>
-        </form>
-      </div>
+          </DialogClose>
+          <Button
+            disabled={isLoading}
+            className="w-[20%] self-center bg-[#41644A] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
+            type="submit"
+          >
+            {isLoading ? 'Submitting...' : 'Submit'}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

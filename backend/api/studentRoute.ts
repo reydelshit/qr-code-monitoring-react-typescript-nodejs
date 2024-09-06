@@ -4,17 +4,26 @@ import path from 'path';
 import multer from 'multer';
 import { Router } from 'express';
 import { databaseConnection } from '../connections/DatabaseConnection';
+import fs from 'fs';
 
 const router = Router();
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, path.join(__dirname, '..', 'uploads')); 
-    },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); 
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, '..', '..', 'uploads');
+    
+    // Ensure the directory exists
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
     }
-  });
+
+    cb(null, uploadPath); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); 
+  }
+});
+
   
   const upload = multer({ storage });
   

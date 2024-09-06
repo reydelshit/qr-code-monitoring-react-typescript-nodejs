@@ -12,6 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from '@/components/ui/dialog';
+
 import { Student } from '@/types/student';
 import axios from 'axios';
 import { useState } from 'react';
@@ -92,12 +102,29 @@ const StudentManagement = () => {
     <div className="relative h-full w-full">
       <h1 className="my-4 text-6xl font-bold">Manage Student</h1>
       <div className="mt-[2rem] h-full w-full">
-        <div className="flex justify-between p-2">
+        <div className="flex w-full justify-between p-2">
           <Input
             onChange={(e) => setSearch(e.target.value)}
             className="w-[20rem]"
             placeholder="Search student.."
           />
+
+          <Dialog>
+            <DialogTrigger>Create Student</DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Register student</DialogTitle>
+                <DialogDescription>
+                  Fill in the form to register a new student
+                </DialogDescription>
+              </DialogHeader>
+              <AddStudent
+                mutate={mutate}
+                setShowStudentForm={setShowStudentForm}
+              />
+            </DialogContent>
+          </Dialog>
+          {/* 
           <Button
             onClick={() => {
               setShowStudentForm(true);
@@ -105,7 +132,7 @@ const StudentManagement = () => {
             }}
           >
             Create Student
-          </Button>
+          </Button> */}
         </div>
 
         {isLoading && <p>Loading...</p>}
@@ -172,14 +199,34 @@ const StudentManagement = () => {
                           <UserRoundSearch size={20} /> View
                         </Link>
                       </Button>
-                      <Button
-                        onClick={() => {
-                          handleEdit(student.student_id);
-                        }}
-                        className="flex gap-1"
-                      >
-                        <UserRoundPen size={20} /> Edit
-                      </Button>
+
+                      <Dialog>
+                        <DialogTrigger>
+                          {' '}
+                          <Button
+                            onClick={() => {
+                              handleEdit(student.student_id);
+                            }}
+                            className="flex gap-1"
+                          >
+                            <UserRoundPen size={20} /> Edit
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Edit student details</DialogTitle>
+                            <DialogDescription>
+                              Fill in the form to edit student details
+                            </DialogDescription>
+                          </DialogHeader>
+                          <EditStudent
+                            mutate={mutate}
+                            setShowEditForm={setShowEditForm}
+                            studentID={studentID}
+                          />
+                        </DialogContent>
+                      </Dialog>
+
                       <Button
                         onClick={() => {
                           handleDelete(student.student_id);
@@ -202,12 +249,11 @@ const StudentManagement = () => {
         />
       </div>
 
-      {showStudentForm && (
+      {/* {showStudentForm && (
         <div className="absolute top-0 flex w-full max-w-[100%] items-center justify-center bg-white bg-opacity-80">
-          <AddStudent mutate={mutate} setShowStudentForm={setShowStudentForm} />
         </div>
-      )}
-
+      )} */}
+      {/* 
       {showEditForm && (
         <div className="absolute top-0 flex w-full max-w-[100%] items-center justify-center bg-white bg-opacity-80">
           <EditStudent
@@ -216,7 +262,7 @@ const StudentManagement = () => {
             studentID={studentID}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 };
