@@ -214,7 +214,7 @@ const ScanStation = () => {
   };
 
   return (
-    <div className="relative h-dvh overflow-x-auto">
+    <div className="relative h-dvh overflow-x-auto px-4">
       <h1 className="my-4 text-6xl font-bold">Scan Station</h1>
 
       <div className="flex h-full w-full flex-col items-center">

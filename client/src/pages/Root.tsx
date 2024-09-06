@@ -1,8 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/toaster';
 import Dashboard from '@/pages/Dashboard';
-import { useState } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
 import {
   ChartBarBig,
   LayoutGrid,
@@ -11,11 +9,17 @@ import {
   ScrollText,
   UserCog,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const Root = () => {
   const params = useLocation();
 
-  const [showSidebar, setShowSidebar] = useState(false);
+  useEffect(() => {
+    if (!localStorage.getItem('isLoggedIn_QR')) {
+      window.location.href = '/login';
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn_QR');

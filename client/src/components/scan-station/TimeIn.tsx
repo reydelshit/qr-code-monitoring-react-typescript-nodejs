@@ -54,7 +54,9 @@ const TimeIn: React.FC<TimeInType> = ({
       <div className="flex h-[500px] min-h-[30rem] gap-4">
         <div className="h-fit w-[30%]">
           <div className="my-4 flex items-center justify-between pr-4">
-            <h1 className="font-semibold">Place your student ID to get scan</h1>
+            <h1 className="font-semibold">
+              Place your student ID to be scanned.
+            </h1>
             <CircleHelp className="block" size={30} />
           </div>
           <Scanner
@@ -153,10 +155,9 @@ const TimeIn: React.FC<TimeInType> = ({
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-center rounded-xl border-[1px] px-4 text-center">
               <QrCode size={50} />
-              <h1 className="text-2xl font-bold"> No Scan Student Data</h1>
+              <h1 className="text-2xl font-bold"> No Student Scanned</h1>
               <span className="inline-block">
-                Scan a student ID to view their information and automatically
-                set their time in.
+                Please Scan a Student ID to Display Details and Set Time In.
               </span>
             </div>
           )}
