@@ -80,10 +80,10 @@ const AttendanceLog = () => {
   if (error) return <div>{error.message}</div>;
 
   return (
-    <div>
+    <div className="h-full w-full overflow-hidden overflow-y-hidden">
       <h1 className="my-4 text-6xl font-bold">Attendance</h1>
 
-      <div className="mt-[2rem] flex h-[2.5rem] justify-between pr-4">
+      <div className="mt-[2rem] flex h-[2.5rem] w-full justify-between border-2">
         <Input
           onChange={(e) => setSearch(e.target.value)}
           className="h-full w-[20rem]"
@@ -111,10 +111,10 @@ const AttendanceLog = () => {
           </PopoverContent>
         </Popover>
       </div>
-      <div className="mt-[2rem]">
+      <div className="mt-[2rem] w-full border-2">
         <h1 className="my-2 font-semibold">Only shows 15 per page</h1>
 
-        <Table>
+        <Table className="w-full">
           <TableCaption>A list of attendance log.</TableCaption>
           <TableHeader>
             <TableRow>

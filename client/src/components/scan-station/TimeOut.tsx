@@ -18,8 +18,9 @@ import { IDetectedBarcode } from '@/types/scan-station';
 import { Attendance } from '@/types/scan-station';
 import { Student } from '@/types/scan-station';
 import usePagination from '@/hooks/usePagination';
-import { CircleHelp, QrCode } from 'lucide-react';
+import { ChartNoAxesGantt, CircleHelp, QrCode } from 'lucide-react';
 import PaginationTemplate from '../Pagination';
+import { Link } from 'react-router-dom';
 
 interface TimeOutType {
   studentID: string;
@@ -60,7 +61,9 @@ const TimeOut: React.FC<TimeOutType> = ({
               <h1 className="font-semibold">
                 Place your student ID to be scanned.
               </h1>
-              <CircleHelp className="block" size={30} />
+              <Link to="/help">
+                <CircleHelp size={30} />
+              </Link>
             </div>
             <Scanner
               allowMultiple={false}
@@ -156,9 +159,26 @@ const TimeOut: React.FC<TimeOutType> = ({
             )}
 
             <div className="h-full w-full rounded-xl border-[1px] px-2">
-              <h1 className="my-5 font-semibold">Todays Entries</h1>
+              <div className="my-5 flex items-center justify-between">
+                <span>
+                  <h1 className="font-semibold">Today's Attendance</h1>
+                  <span className="text-[12px]">
+                    {filteredAttendance?.length} students attended today.
+                  </span>
+                </span>
+
+                <span className="flex flex-col font-medium">
+                  <Link to="/attendance-log" className="flex">
+                    {' '}
+                    See more <ChartNoAxesGantt />
+                  </Link>
+                </span>
+              </div>
 
               <div>
+                <p className="text-[12px] font-semibold">
+                  Only shows 10 per page
+                </p>
                 <Table>
                   <TableCaption>A list of todays attendance.</TableCaption>
                   <TableHeader>

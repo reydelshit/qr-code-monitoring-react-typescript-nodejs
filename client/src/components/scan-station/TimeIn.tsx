@@ -17,6 +17,7 @@ import PaginationTemplate from '../Pagination';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { Link } from 'react-router-dom';
 
 interface TimeInType {
   studentID: string;
@@ -57,7 +58,9 @@ const TimeIn: React.FC<TimeInType> = ({
             <h1 className="font-semibold">
               Place your student ID to be scanned.
             </h1>
-            <CircleHelp className="block" size={30} />
+            <Link to="/help">
+              <CircleHelp size={30} />
+            </Link>
           </div>
           <Scanner
             allowMultiple={false}
@@ -172,10 +175,10 @@ const TimeIn: React.FC<TimeInType> = ({
               </span>
 
               <span className="flex flex-col font-medium">
-                <p className="flex">
+                <Link to="/attendance-log" className="flex">
                   {' '}
                   See more <ChartNoAxesGantt />
-                </p>
+                </Link>
               </span>
             </div>
 

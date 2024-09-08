@@ -10,6 +10,7 @@ import ScanStation from './pages/ScanStation';
 import ViewStudentDetails from './components/manage-student/ViewStudentDetails';
 import Login from './pages/Login';
 import Message from './pages/Message';
+import Help from './pages/Help';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,11 @@ const router = createBrowserRouter([
       {
         path: 'ScanStation',
         element: <ScanStation />,
+      },
+
+      {
+        path: 'help',
+        element: <Help />,
       },
     ],
   },

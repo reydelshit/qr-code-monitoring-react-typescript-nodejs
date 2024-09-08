@@ -21,7 +21,7 @@ const PaginationTemplate = ({
   handlePageChange,
 }: PaginationTemplateProps) => {
   return (
-    <div className="mt-[2rem]">
+    <div className="my-[2rem]">
       <Pagination>
         <PaginationContent>
           <PaginationItem>

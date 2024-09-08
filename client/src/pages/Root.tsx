@@ -27,9 +27,9 @@ const Root = () => {
     window.location.href = '/login';
   };
   return (
-    <div className="flex h-dvh w-dvw items-center justify-center overflow-y-hidden">
-      <div className="mx-auto flex h-full w-full gap-4">
-        <div className="relative flex h-screen w-[250px] flex-col gap-2 border-r-[1px] p-2 pt-[4rem]">
+    <div className="flex h-full w-full items-center justify-center">
+      <div className="relative mx-auto flex h-full w-full gap-4">
+        <div className="sticky left-0 top-0 flex h-screen w-[250px] flex-col gap-2 border-r-[1px] p-2 pt-[4rem]">
           <Button
             variant={'outline'}
             className={`border-none p-2 ${params.pathname === '/' ? 'bg-black text-white' : ''}`}
