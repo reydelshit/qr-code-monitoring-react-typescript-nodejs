@@ -23,21 +23,6 @@ import {
 import PaginationTemplate from '@/components/Pagination';
 import usePagination from '@/hooks/usePagination';
 
-// const chartData = [
-//   { month: 'January', total: 186, color: '#0D7C66' },
-//   { month: 'February', total: 305, color: '#821131' },
-//   { month: 'March', total: 237, color: '#2563eb' },
-//   { month: 'April', total: 73, color: '#7c3aed' },
-//   { month: 'May', total: 209, color: '#db2777' },
-//   { month: 'June', total: 214, color: '#ea580c' },
-//   { month: 'July', total: 189, color: '#65a30d' },
-//   { month: 'August', total: 239, color: '#0891b2' },
-//   { month: 'September', total: 349, color: '#4f46e5' },
-//   { month: 'October', total: 278, color: '#b91c1c' },
-//   { month: 'November', total: 298, color: '#854d0e' },
-//   { month: 'December', total: 259, color: '#115e59' },
-// ];
-
 interface ChartData {
   month: string;
   total: number;

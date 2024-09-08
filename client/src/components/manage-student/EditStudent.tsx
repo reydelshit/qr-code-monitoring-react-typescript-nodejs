@@ -19,33 +19,14 @@ import QRCode from 'react-qr-code';
 // import { URL } from 'url';
 import { DialogClose } from '@/components/ui/dialog';
 
-interface StudentFormData {
-  student_id: string;
-  student_id_code: string;
-  student_image_path: File | null;
-  student_firstname: string;
-  student_lastname: string;
-  student_middlename: string;
-  student_datebirth: string;
-  student_grade_level: string;
-  student_program: string;
-  student_block_section: string;
-  student_parent_name: string;
-  student_parent_number: string;
-  student_parent_email: string;
-  student_address: string;
-}
-
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>;
 
 export default function EditStudent({
-  setShowEditForm,
   studentID,
   mutate,
 }: {
-  setShowEditForm: (value: boolean) => void;
   studentID: string;
   mutate: () => void;
 }) {
@@ -151,7 +132,7 @@ export default function EditStudent({
           title: 'Student Updated Successfully',
           description: 'The student has been updated to the system.',
         });
-        setShowEditForm(false);
+
         mutate();
       }
     } catch (error) {
@@ -219,7 +200,7 @@ export default function EditStudent({
             </div>
           </div>
 
-          <div className="w-full">
+          <div className="mt-[-1rem] w-full">
             <Label className="my-2 block text-2xl">Basic Information</Label>
             <div className="flex w-full items-end gap-4">
               <div className="w-full">
@@ -242,20 +223,21 @@ export default function EditStudent({
                   defaultValue={student.student_name}
                 />
               </div>
-            </div>
-            <div className="item-start flex flex-col">
-              <Label className="mb-2 text-start">
-                Date of Birth{' '}
-                <span className="font-bold underline">
-                  ({student.student_datebirth})
-                </span>
-              </Label>
-              <Input
-                type="date"
-                name="student_datebirth"
-                className="mb-2"
-                onChange={handleChange}
-              />
+
+              <div className="w-full">
+                <Label className="mb-2 text-start">
+                  Date of Birth{' '}
+                  <span className="font-bold underline">
+                    ({student.student_datebirth})
+                  </span>
+                </Label>
+                <Input
+                  type="date"
+                  name="student_datebirth"
+                  className="mb-2"
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
             <div className="flex gap-4">
@@ -269,7 +251,7 @@ export default function EditStudent({
                 />
               </div>
 
-              <div className="mb-[2rem] w-full text-start">
+              <div className="w-full text-start">
                 <Label className="mb-2">
                   Gender
                   <span>({student.student_gender})</span>
@@ -363,17 +345,13 @@ export default function EditStudent({
 
         <span className="text-red-500">{error}</span>
 
-        <div className="my-4 flex justify-end gap-4">
+        <div className="mt-[-1rem] flex justify-end gap-4">
           <DialogClose>
             <Button onClick={() => mutate()} type="button" variant="secondary">
               Close
             </Button>
           </DialogClose>
-          <Button
-            disabled={isLoadingSubmission}
-            className="w-[20%] self-center bg-[#41644A] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
-            type="submit"
-          >
+          <Button disabled={isLoadingSubmission} type="submit">
             {isLoadingSubmission ? 'Updating...' : 'Update'}
           </Button>
         </div>

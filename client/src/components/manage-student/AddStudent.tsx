@@ -2,10 +2,10 @@ import React from 'react';
 
 import defaultProfile from '@/assets/profile.webp';
 import { Button } from '@/components/ui/button';
+import { DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
-import { DialogClose } from '@/components/ui/dialog';
 
 import {
   Select,
@@ -36,13 +36,7 @@ interface StudentFormData {
   student_address: string;
 }
 
-export default function AddStudent({
-  setShowStudentForm,
-  mutate,
-}: {
-  setShowStudentForm: (value: boolean) => void;
-  mutate: () => void;
-}) {
+export default function AddStudent({ mutate }: { mutate: () => void }) {
   const {
     register,
     handleSubmit,
@@ -127,7 +121,7 @@ export default function AddStudent({
           title: 'Student Added Successfully',
           description: 'The student has been added to the system.',
         });
-        setShowStudentForm(false);
+
         mutate();
         reset();
         setImage(null);
@@ -149,7 +143,7 @@ export default function AddStudent({
   return (
     <div className="flex w-full flex-col items-center gap-[1rem] p-2">
       <form
-        className="w-full px-4 text-start"
+        className="h-full w-full px-4 text-start"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex gap-4">
@@ -241,7 +235,7 @@ export default function AddStudent({
                 />
               </div>
 
-              <div className="mb-[2rem] w-full text-start">
+              <div className="mb-[1rem] w-full text-start">
                 <Label className="mb-2">Gender</Label>
 
                 <Select
@@ -260,7 +254,7 @@ export default function AddStudent({
               </div>
             </div>
 
-            <Label className="my-2 block text-2xl">Program Information</Label>
+            <Label className="block text-2xl">Program Information</Label>
 
             <div className="w-full">
               <Label className="mb-2 text-start">Program</Label>
@@ -296,7 +290,7 @@ export default function AddStudent({
               </div>
             </div>
 
-            <Label className="my-2 block text-2xl">Contact Information</Label>
+            <Label className="block text-2xl">Contact Information</Label>
 
             <div className="w-full">
               <Label className="mb-2 text-start">Parent/Guardian Name</Label>
@@ -355,11 +349,7 @@ export default function AddStudent({
               Close
             </Button>
           </DialogClose>
-          <Button
-            disabled={isLoading}
-            className="w-[20%] self-center bg-[#41644A] text-white hover:border-2 hover:border-[#41644A] hover:bg-white hover:text-[#41644A]"
-            type="submit"
-          >
+          <Button disabled={isLoading} type="submit">
             {isLoading ? 'Submitting...' : 'Submit'}
           </Button>
         </div>

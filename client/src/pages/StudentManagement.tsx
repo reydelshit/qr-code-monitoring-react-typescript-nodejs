@@ -4,6 +4,14 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
   Table,
   TableBody,
   TableCaption,
@@ -12,30 +20,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from '@/components/ui/dialog';
 
+import PaginationTemplate from '@/components/Pagination';
+import { Input } from '@/components/ui/input';
+import usePagination from '@/hooks/usePagination';
 import { Student } from '@/types/student';
 import axios from 'axios';
+import { UserRoundPen, UserRoundSearch, UserX } from 'lucide-react';
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
-import usePagination from '@/hooks/usePagination';
-import PaginationTemplate from '@/components/Pagination';
-import { Input } from '@/components/ui/input';
-import { UserRoundPen, UserRoundSearch, UserX } from 'lucide-react';
 
 const StudentManagement = () => {
-  const [showStudentForm, setShowStudentForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
   const [studentID, setStudentID] = useState('');
   const { toast } = useToast();
   const [search, setSearch] = useState('');
@@ -95,7 +92,6 @@ const StudentManagement = () => {
 
   const handleEdit = (student_id: string) => {
     setStudentID(student_id);
-    setShowEditForm(true);
   };
 
   return (
@@ -110,18 +106,19 @@ const StudentManagement = () => {
           />
 
           <Dialog>
-            <DialogTrigger>Create Student</DialogTrigger>
-            <DialogContent>
+            <DialogTrigger>
+              <Button className="w-[240px] rounded-lg">Create Student</Button>
+            </DialogTrigger>
+            <DialogContent className="h-[95%] w-[70%]">
               <DialogHeader>
-                <DialogTitle>Register student</DialogTitle>
-                <DialogDescription>
-                  Fill in the form to register a new student
-                </DialogDescription>
+                <div className="hidden">
+                  <DialogTitle>Register student</DialogTitle>
+                  <DialogDescription>
+                    Fill in the form to register a new student
+                  </DialogDescription>
+                </div>
               </DialogHeader>
-              <AddStudent
-                mutate={mutate}
-                setShowStudentForm={setShowStudentForm}
-              />
+              <AddStudent mutate={mutate} />
             </DialogContent>
           </Dialog>
           {/* 
@@ -170,20 +167,22 @@ const StudentManagement = () => {
                       alt="student"
                     />
                   </TableCell>
-                  <TableCell>
-                    <div>
-                      <QRCode
-                        size={15}
-                        style={{
-                          height: 'auto',
-                          maxWidth: '100%',
-                          width: '50%',
-                        }}
-                        value={student.student_id_code}
-                        viewBox={`0 0 256 256`}
-                      />
-                    </div>
-                    {student.student_id_code}
+                  <TableCell className="mx-auto grid place-items-center text-center">
+                    <QRCode
+                      size={15}
+                      style={{
+                        height: 'auto',
+                        maxWidth: '100%',
+                        width: '50%',
+                      }}
+                      value={student.student_id_code}
+                      viewBox={`0 0 256 256`}
+                    />
+
+                    <span className="font-semibold">
+                      {' '}
+                      {student.student_id_code}
+                    </span>
                   </TableCell>
                   <TableCell>{student.student_name}</TableCell>
                   <TableCell>{student.student_datebirth}</TableCell>
@@ -212,18 +211,16 @@ const StudentManagement = () => {
                             <UserRoundPen size={20} /> Edit
                           </Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="h-[95%] w-[70%]">
                           <DialogHeader>
-                            <DialogTitle>Edit student details</DialogTitle>
-                            <DialogDescription>
-                              Fill in the form to edit student details
-                            </DialogDescription>
+                            <div className="hidden">
+                              <DialogTitle>Edit student details</DialogTitle>
+                              <DialogDescription>
+                                Fill in the form to edit student details
+                              </DialogDescription>
+                            </div>
                           </DialogHeader>
-                          <EditStudent
-                            mutate={mutate}
-                            setShowEditForm={setShowEditForm}
-                            studentID={studentID}
-                          />
+                          <EditStudent mutate={mutate} studentID={studentID} />
                         </DialogContent>
                       </Dialog>
 

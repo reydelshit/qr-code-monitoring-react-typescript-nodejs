@@ -10,21 +10,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import usePagination from '@/hooks/usePagination';
+import { MessageType } from '@/types/message';
 import React from 'react';
 import useSWR from 'swr';
-
-interface Message {
-  message_id: string;
-  student_id: string;
-  content: string;
-  dateSent: string;
-  recepientNumber: string;
-}
 
 const Message = () => {
   const [search, setSearch] = React.useState('');
 
-  const fetcher = async (url: string): Promise<Message[]> => {
+  const fetcher = async (url: string): Promise<MessageType[]> => {
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Network response was not ok');
