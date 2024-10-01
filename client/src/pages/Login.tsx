@@ -44,8 +44,8 @@ export default function Login() {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center text-center">
       <div className="flex h-fit w-[30rem] flex-col items-center rounded-xl border-[1px] p-4 shadow-md">
-        <img src={Logo} alt="logo" className="my-4 h-[15rem] w-[15rem]" />
-        <h1 className="my-2 font-semibold">ADMIN</h1>
+        <img src={Logo} alt="logo" className="my-4 h-[12rem] w-[12rem]" />
+        {/* <h1 className="my-2 font-semibold">ADMIN</h1> */}
 
         <h1 className="my-2 font-semibold">ENTER CREDENTIALS TO LOGIN</h1>
         <form
@@ -65,10 +65,10 @@ export default function Login() {
             name="password"
             onChange={handleChange}
           />
-          <Button className="w-[80%]" type="submit">
+          <Button className="mt-[2rem] w-[70%]" type="submit">
             Login
           </Button>
-          <span>OR</span>
+          <span className="my-4 block">OR</span>
           <Button>
             <Link to={'/scan'}>Go to Scan Station</Link>
           </Button>{' '}

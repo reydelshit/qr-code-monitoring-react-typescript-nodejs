@@ -29,7 +29,8 @@ const ScanStation = () => {
   const path = useLocation().pathname;
 
   const apiKey =
-    '_A9QaZDJewc0TKL8sEUsNFoqOCbKT-a6zopzW2Dy30XZ1YnE1MwtmTPYQloPIyvH';
+    'rmK5hgw_qmK4AZYu4mckpQEQexmEp4_kTrFbq8-HYgpo62CCVaD60fK5m-IlG4Ss';
+
   const fetcher = async (url: string): Promise<Attendance[]> => {
     const response = await fetch(url);
     if (!response.ok) {
@@ -62,6 +63,8 @@ const ScanStation = () => {
       recepientNumber: student_details.student_parent_number,
     });
 
+    console.log(student_details.student_parent_number);
+
     return fetch('https://api.httpsms.com/v1/messages/send', {
       method: 'POST',
       headers: {
@@ -71,9 +74,9 @@ const ScanStation = () => {
       },
       body: JSON.stringify({
         content: message,
-        from: '+639097134971',
-        // to: `${student.student_parent_number}`,
-        to: '+639097134971',
+        from: '+639763407377',
+        to: `+${student_details.student_parent_number}`,
+        // to: '+639097134971',
       }),
     });
   };
