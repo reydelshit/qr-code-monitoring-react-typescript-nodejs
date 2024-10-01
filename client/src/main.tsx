@@ -43,11 +43,6 @@ const router = createBrowserRouter([
         path: 'ScanStation',
         element: <ScanStation />,
       },
-
-      {
-        path: 'help',
-        element: <Help />,
-      },
     ],
   },
   {
@@ -57,6 +52,11 @@ const router = createBrowserRouter([
   {
     path: '/scan',
     element: <ScanStation />,
+  },
+
+  {
+    path: 'help',
+    element: <Help />,
   },
 ]);
 

@@ -1,22 +1,15 @@
-import TableTemplate from '@/components/TableTemplate';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
-
-import useSWR from 'swr';
-import moment from 'moment';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import moment from 'moment';
+import useSWR from 'swr';
 
+import PaginationTemplate from '@/components/Pagination';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -26,12 +19,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
-import { Button } from '@/components/ui/button';
 import usePagination from '@/hooks/usePagination';
-import PaginationTemplate from '@/components/Pagination';
+import { useState } from 'react';
 
 interface Attendance extends Record<string, React.ReactNode> {
   attendance_id: string;

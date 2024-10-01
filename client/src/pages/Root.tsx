@@ -119,6 +119,15 @@ const Root = () => {
 
         <div className="h-full w-full">
           {/* This is where the child routes get rendered */}
+          <Button
+            onClick={() => {
+              localStorage.removeItem('isLoggedIn_QR');
+              localStorage.removeItem('role');
+            }}
+            className="absolute right-8 top-5 z-10 cursor-pointer"
+          >
+            <Link to={'/scan'}>Switch to Scan Station</Link>
+          </Button>
           {params.pathname === '/' ? <Dashboard /> : <Outlet />}
         </div>
       </div>

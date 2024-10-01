@@ -1,15 +1,21 @@
-import React from 'react';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const Help = () => {
   return (
-    <div className="flex h-full flex-col items-start overflow-x-auto">
+    <div className="flex h-full flex-col items-center overflow-x-auto">
       <h1 className="my-4 text-6xl font-bold">FAQs</h1>
+      <div className="flex w-[70%] justify-start">
+        <Button>
+          <Link to={'/scan'}>Back to Scan Station</Link>
+        </Button>{' '}
+      </div>
       <div className="mt-[2rem] flex w-full flex-col items-center justify-center">
         <Accordion className="w-[70%]" type="single" collapsible>
           <AccordionItem value="item-1">

@@ -5,10 +5,13 @@ import { useEffect, useState } from 'react';
 import ReactiveTime from '@/components/ReactiveTime';
 import TimeIn from '@/components/scan-station/TimeIn';
 import TimeOut from '@/components/scan-station/TimeOut';
+import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { Attendance, Student } from '@/types/scan-station';
 import { AlarmClock } from 'lucide-react';
 import moment from 'moment';
+import { useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 const ScanStation = () => {
@@ -22,6 +25,8 @@ const ScanStation = () => {
   const [timeNow, setTimeNow] = useState(
     moment().format('YYYY-MM-DD HH:mm:ss'),
   );
+
+  const path = useLocation().pathname;
 
   const apiKey =
     '_A9QaZDJewc0TKL8sEUsNFoqOCbKT-a6zopzW2Dy30XZ1YnE1MwtmTPYQloPIyvH';
@@ -215,7 +220,15 @@ const ScanStation = () => {
 
   return (
     <div className="relative h-dvh overflow-x-auto px-4">
-      <h1 className="my-4 text-6xl font-bold">Scan Station</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="my-4 text-6xl font-bold">Scan Station</h1>
+
+        {path === '/scan' && (
+          <Button>
+            <Link to={'/login'}>Login</Link>
+          </Button>
+        )}
+      </div>
 
       <div className="flex h-full w-full flex-col items-center">
         <h1 className="flex w-full items-center justify-end gap-2 px-4 text-end text-2xl font-semibold">
