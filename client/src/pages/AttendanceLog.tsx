@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/table';
 import usePagination from '@/hooks/usePagination';
 import { useState } from 'react';
+import { ExportPDF } from '@/components/ExportPDF';
 
 interface Attendance extends Record<string, React.ReactNode> {
   attendance_id: string;
@@ -33,6 +34,7 @@ interface Attendance extends Record<string, React.ReactNode> {
 const AttendanceLog = () => {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [search, setSearch] = useState('');
+  const [showAllTime, setShowAllTime] = useState(false);
 
   const fetcher = async (url: string): Promise<Attendance[]> => {
     const response = await fetch(url);
@@ -50,11 +52,15 @@ const AttendanceLog = () => {
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/attendance`, fetcher);
 
   const filteredAttendance = attendance
-    .filter((data) =>
-      date !== undefined
+    .filter((data) => {
+      if (showAllTime) {
+        return true;
+      }
+
+      return date !== undefined
         ? moment(data.timeIn).format('LL') === moment(date).format('LL')
-        : data,
-    )
+        : true;
+    })
     .filter((data) =>
       data.student_id_code.toLowerCase().includes(search.toLowerCase()),
     );
@@ -76,29 +82,47 @@ const AttendanceLog = () => {
         <Input
           onChange={(e) => setSearch(e.target.value)}
           className="h-full w-[20rem]"
-          placeholder="Search student.."
+          placeholder="Search student by ID Code"
         />
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant={'outline'} className="h-full w-[240px] rounded-lg">
-              Filter by Date
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(date) =>
-                (
+        <div className="inline-flex gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={'outline'}
+                className="h-full w-[240px] rounded-lg"
+              >
+                Filter by Date
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Button
+                onClick={() => setShowAllTime(true)}
+                className="my-2 w-full"
+                variant={'secondary'}
+              >
+                {' '}
+                All Time
+              </Button>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(date) => {
                   // console.log(date),
-                  setDate(date), console.log('Selected date:', date)
-                )
-              }
-              className="rounded-md border"
-            />
-          </PopoverContent>
-        </Popover>
+                  setDate(date), console.log('Selected date:', date);
+                  setShowAllTime(false);
+                }}
+                className="rounded-md border"
+              />
+            </PopoverContent>
+          </Popover>
+
+          <ExportPDF
+            data={filteredAttendance}
+            fileName={`Attendance_ ${date ? moment(date).format('LL') : 'All Time'}`}
+            title={`Attendance Log for ${date ? moment(date).format('LL') : 'All Time'}`}
+          />
+        </div>
       </div>
       <div className="mt-[2rem] w-full">
         <h1 className="my-2 font-semibold">Only shows 15 per page</h1>
