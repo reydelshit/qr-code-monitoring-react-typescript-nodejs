@@ -33,8 +33,6 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 console.log('Serving static files from:', path.join(__dirname, 'uploads'));
 
 
-
-
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);
 });
@@ -62,38 +60,38 @@ const users = [
 app.get('/', (req, res) => { res.send('Welcome to the QR Code Monitoring System'); });
 
 
-// LOGIN API 
-app.post('/login', (req, res) => {
-    const { username, password } = req.body;
+// // LOGIN API 
+// app.post('/login', (req, res) => {
+//     const { username, password } = req.body;
 
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-      const token = jwt.sign({ userId: user.userId, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-      res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
-      return res.json({ message: 'Login successful', token: token });
-  }
-  res.status(401).json({ message: 'Invalid credentials' });
-});
+//     const user = users.find(u => u.username === username && u.password === password);
+//     if (user) {
+//       const token = jwt.sign({ userId: user.userId, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+//       res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+//       return res.json({ message: 'Login successful', token: token });
+//   }
+//   res.status(401).json({ message: 'Invalid credentials' });
+// });
 
-// VALIDATE TOKEN 
-const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const token = req.cookies.token;
+// // VALIDATE TOKEN 
+// const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+//     const token = req.cookies.token;
 
-    if (!token) return res.sendStatus(401);
+//     if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, SECRET_KEY, (err: VerifyErrors | null, decoded: unknown) => {
-        if (err) return res.sendStatus(403);
+//     jwt.verify(token, SECRET_KEY, (err: VerifyErrors | null, decoded: unknown) => {
+//         if (err) return res.sendStatus(403);
         
-        const user = decoded as UserPayload;
-        req.user = user;
-        next();
-    });
-}
+//         const user = decoded as UserPayload;
+//         req.user = user;
+//         next();
+//     });
+// }
 
 
-app.get('/protected', authenticateToken, (req: AuthenticatedRequest, res) => {
-    res.json({ message: 'This is a protected routes', user: req.user });
-});
+// app.get('/protected', authenticateToken, (req: AuthenticatedRequest, res) => {
+//     res.json({ message: 'This is a protected routes', user: req.user });
+// });
 
 
 
@@ -103,4 +101,4 @@ app.use("/messages", messageRouter);
 app.use("/dashboard", dashboardRouter);
 
 
-
+export default app
