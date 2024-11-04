@@ -25,7 +25,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf dist && npx tsc",
+    "build": "rimraf dist && npx tsc && mkdir -p dist/connections && cp backend/connections/ca.pem dist/connections/",
     "prestart": "npm run build",
     "start": "node dist/index.js",
     "preserve": "npm run build",
