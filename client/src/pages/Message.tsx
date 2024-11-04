@@ -1,3 +1,4 @@
+import { ExportPDF } from '@/components/ExportPDF';
 import PaginationTemplate from '@/components/Pagination';
 import { Input } from '@/components/ui/input';
 import {
@@ -29,7 +30,7 @@ const Message = () => {
     data: messages = [],
     error,
     isLoading,
-    mutate,
+    // mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/messages`, fetcher);
 
   console.log(messages, 'message');
@@ -55,19 +56,28 @@ const Message = () => {
       <h1 className="my-4 text-6xl font-bold">Message</h1>
 
       <div className="mt-[2rem] w-full pr-4">
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col items-center justify-between">
+          <div className="flex w-full items-center justify-between">
             <Input
               className="w-[20rem]"
-              placeholder="Search"
+              placeholder="Search for student ID"
               onChange={(e) => setSearch(e.target.value)}
             />
-            <span className="mt-4 block font-semibold">Shows 10 per page</span>
+
+            <ExportPDF
+              data={currentItems}
+              fileName={`Messages_`}
+              title={`Messages_`}
+            />
           </div>
 
-          <span className="block font-semibold">
-            Showing {currentItems.length} of {messages.length} entries
-          </span>
+          <div className="mt-4 flex w-full justify-between">
+            <span className="block font-semibold">
+              Showing {currentItems.length} of {messages.length} entries
+            </span>
+
+            <span className="mt-4 block font-semibold">Shows 10 per page</span>
+          </div>
         </div>
         <Table className="my-4 w-full">
           <TableCaption>

@@ -55,9 +55,9 @@ const TimeOut: React.FC<TimeOutType> = ({
   return (
     <>
       <div className="flex h-full w-[100%] items-start justify-center gap-4">
-        <div className="flex h-[500px] min-h-[30rem] gap-4">
-          <div className="h-fit w-[30%]">
-            <div className="my-4 flex items-center justify-between pr-4">
+        <div className="flex h-[500px] min-h-[30rem] flex-col gap-4 md:flex-row">
+          <div className="mx-2 block h-fit w-full md:w-[30%]">
+            <div className="flex items-center justify-between p-2 md:my-4 md:pr-4">
               <h1 className="font-semibold">
                 Place your student ID to be scanned.
               </h1>
@@ -65,17 +65,18 @@ const TimeOut: React.FC<TimeOutType> = ({
                 <CircleHelp size={30} />
               </Link>
             </div>
-            <Scanner
-              allowMultiple={false}
-              onScan={(result: IDetectedBarcode[]) => {
-                console.log('Student ID:', result[0].rawValue);
+            <div>
+              <Scanner
+                allowMultiple={false}
+                onScan={(result: IDetectedBarcode[]) => {
+                  console.log('Student ID:', result[0].rawValue);
 
-                fetchStudentData(result[0].rawValue, 'time-out');
-                fetchAttendanceForTimeout(result[0].rawValue);
-              }}
-            />
-
-            <Label className="my-4 block">
+                  fetchStudentData(result[0].rawValue, 'time-out');
+                  fetchAttendanceForTimeout(result[0].rawValue);
+                }}
+              />
+            </div>
+            <Label className="my-4 block md:h-fit">
               Scan not working?{' '}
               <span
                 className="my-2 block cursor-pointer underline"
@@ -113,7 +114,7 @@ const TimeOut: React.FC<TimeOutType> = ({
             )}
           </div>
 
-          <div className="grid h-full w-[80%] grid-cols-2 gap-4">
+          <div className="flex h-full w-full flex-col gap-2 md:w-[80%] md:flex-row md:gap-4">
             {student.student_id_code?.length > 0 ? (
               <div className="flex h-full w-full flex-col items-center border-orange-600">
                 <h1 className="my-5 w-full text-start font-semibold">
@@ -149,7 +150,7 @@ const TimeOut: React.FC<TimeOutType> = ({
                 </div>
               </div>
             ) : (
-              <div className="flex h-full w-full flex-col items-center justify-center rounded-xl border-[1px] px-4 text-center">
+              <div className="flex h-[50rem] w-full flex-col items-center justify-center rounded-xl border-[1px] px-4 text-center md:h-full">
                 <QrCode size={50} />
                 <h1 className="text-2xl font-bold"> No Student Scanned</h1>
                 <span className="inline-block">

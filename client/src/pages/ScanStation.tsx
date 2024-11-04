@@ -17,9 +17,9 @@ import useSWR from 'swr';
 const ScanStation = () => {
   const [studentID, setStudentID] = useState('');
   const [student, setStudent] = useState<Student>({} as Student);
-  const [attendanceForTimeout, setAttendanceForTimeout] = useState<
-    Attendance[]
-  >([]);
+  // const [attendanceForTimeout, setAttendanceForTimeout] = useState<
+  //   Attendance[]
+  // >([]);
   const [showManualInput, setShowManualInput] = useState(false);
   const { toast } = useToast();
   const [timeNow, setTimeNow] = useState(
@@ -41,8 +41,8 @@ const ScanStation = () => {
 
   const {
     data: attendance = [],
-    error,
-    isLoading,
+    // error,
+    // isLoading,
     mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/attendance`, fetcher);
 
@@ -169,7 +169,7 @@ const ScanStation = () => {
         .get(`${import.meta.env.VITE_SERVER_LINK}/attendance/${student_id}`)
         .then((res) => {
           console.log(res.data, 'Attendance Data');
-          setAttendanceForTimeout(res.data);
+          // setAttendanceForTimeout(res.data);
         });
     } catch (error) {
       console.log(error);
