@@ -6,6 +6,7 @@ import {
 import moment from 'moment';
 import useSWR from 'swr';
 
+import { ExportPDF } from '@/components/ExportPDF';
 import PaginationTemplate from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -21,7 +22,6 @@ import {
 } from '@/components/ui/table';
 import usePagination from '@/hooks/usePagination';
 import { useState } from 'react';
-import { ExportPDF } from '@/components/ExportPDF';
 
 interface Attendance extends Record<string, React.ReactNode> {
   attendance_id: string;
@@ -48,7 +48,7 @@ const AttendanceLog = () => {
     data: attendance = [],
     error,
     isLoading,
-    mutate,
+    // mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/attendance`, fetcher);
 
   const filteredAttendance = attendance

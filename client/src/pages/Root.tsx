@@ -9,7 +9,7 @@ import {
   ScrollText,
   UserCog,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const Root = () => {

@@ -30,7 +30,7 @@ const Message = () => {
     data: messages = [],
     error,
     isLoading,
-    mutate,
+    // mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/messages`, fetcher);
 
   console.log(messages, 'message');

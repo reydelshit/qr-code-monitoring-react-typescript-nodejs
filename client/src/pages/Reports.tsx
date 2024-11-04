@@ -1,15 +1,10 @@
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import moment from 'moment';
 import useSWR from 'swr';
 
+import { ExportPDF } from '@/components/ExportPDF';
 import PaginationTemplate from '@/components/Pagination';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import {
   Table,
   TableBody,
@@ -20,17 +15,15 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import usePagination from '@/hooks/usePagination';
-import { useState } from 'react';
-import { ExportPDF } from '@/components/ExportPDF';
+import { Student } from '@/types/student';
 import {
   CalendarDays,
   CalendarMinus2,
   CalendarRange,
   Users,
 } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { useState } from 'react';
 import QRCode from 'react-qr-code';
-import { Student } from '@/types/student';
 
 interface Attendance extends Record<string, React.ReactNode> {
   attendance_id: string;
@@ -40,7 +33,7 @@ interface Attendance extends Record<string, React.ReactNode> {
   created_at: string;
 }
 const Reports = () => {
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  // const [date, setDate] = useState<Date | undefined>(undefined);
   const [search, setSearch] = useState('');
 
   const [filterType, setFilterType] = useState('all time');
@@ -58,7 +51,7 @@ const Reports = () => {
     data: attendance = [],
     error,
     isLoading,
-    mutate,
+    // mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/attendance`, fetcher);
 
   const fetcherStudent = async (url: string): Promise<Student[]> => {
