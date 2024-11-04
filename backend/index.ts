@@ -59,6 +59,8 @@ const users = [
       process.env.VITE_USERNAME, password:  process.env.VITE_PASSWORD },
 ];
 
+app.get('/', (req, res) => { res.send('Welcome to the QR Code Monitoring System'); });
+
 
 // LOGIN API 
 app.post('/login', (req, res) => {
