@@ -42,7 +42,7 @@ console.log('Serving static files from:', path.join(__dirname, 'uploads'));
 
 
 app.listen(PORT, () => {
-    console.log(`Server is running on PORT ${PORT}`);
+    console.log(`Server is running on PORTs ${PORT}`);
   });
 
 app.get('/', (req, res) => { res.send('Welcome to the QR Code Monitoring System'); });
