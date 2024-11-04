@@ -92,7 +92,7 @@ const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextF
 
 
 app.get('/protected', authenticateToken, (req: AuthenticatedRequest, res) => {
-    res.json({ message: 'This is a protected route', user: req.user });
+    res.json({ message: 'This is a protected routes', user: req.user });
 });
 
 
