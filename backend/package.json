@@ -31,6 +31,11 @@
     "preserve": "npm run build",
     "serve": "concurrently \"npx tsc -w\" \"nodemon dist/index.js\""
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
