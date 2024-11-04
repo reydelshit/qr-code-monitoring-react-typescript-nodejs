@@ -68,7 +68,6 @@ router.get("/:id", (req, res) => {
   
       return res.json({
         ...data,
-        lastID: data.insertId,
         message: "Successfully added",
         status: "success",
       });
