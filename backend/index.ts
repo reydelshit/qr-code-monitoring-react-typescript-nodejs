@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
@@ -11,19 +14,8 @@ import { dashboardRouter } from './api/dashboardRoute';
 
 
 
-interface UserPayload extends JwtPayload {
-    userId?: number;
-    username: string;
-}
-
-interface AuthenticatedRequest extends Request {
-    user?: UserPayload;
-}
-
-dotenv.config();
 const app: Express = express();
 const PORT = process.env.PORT || 8800;
-const SECRET_KEY = 'REYDEL'; 
 
 app.use(express.json());
 app.use(cors());
@@ -33,9 +25,6 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 console.log('Serving static files from:', path.join(__dirname, 'uploads'));
 
 
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT ${PORT}`);
-});
 
 app.use((req, res, next) => {
     res.header(
@@ -52,10 +41,9 @@ app.use((req, res, next) => {
   });
 
 
-const users = [
-    { userId: 1, username: 
-      process.env.VITE_USERNAME, password:  process.env.VITE_PASSWORD },
-];
+app.listen(PORT, () => {
+    console.log(`Server is running on PORT ${PORT}`);
+  });
 
 app.get('/', (req, res) => { res.send('Welcome to the QR Code Monitoring System'); });
 
