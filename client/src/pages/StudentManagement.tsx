@@ -81,7 +81,7 @@ const StudentManagement = () => {
           mutate();
         }
       })
-      .catch((err) => {
+      .catch(() => {
         toast({
           title: 'Error',
           description: 'An error occurred while adding the student.',

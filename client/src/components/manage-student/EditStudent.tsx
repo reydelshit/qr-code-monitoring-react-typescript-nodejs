@@ -35,11 +35,11 @@ export default function EditStudent({
   const [student, setStudent] = useState<Student>({} as Student);
   const { toast } = useToast();
   const [image, setImage] = useState<string | null>(null);
-  const [errorField, setErrorField] = useState('' as string);
+  // const [errorField, setErrorField] = useState('' as string);
   const [selectedGender, setSelectedGender] = useState('' as string);
 
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [errorImage, setErrorImage] = useState<string | null>(null);
+  // const [errorImage, setErrorImage] = useState<string | null>(null);
 
   const fetcher = async (url: string): Promise<Student[]> => {
     const response = await fetch(url);
@@ -85,7 +85,8 @@ export default function EditStudent({
     e.preventDefault();
 
     if (!imageFile && !student.student_image_path) {
-      setErrorField('Please fill in all fields');
+      // setErrorField('Please fill in all fields');
+      console.log('Please fill in all fields');
       return;
     }
 
@@ -155,9 +156,9 @@ export default function EditStudent({
       if (selectedFile.type.startsWith('image/')) {
         setImageFile(selectedFile);
         setImage(URL.createObjectURL(selectedFile));
-        setErrorImage(null);
+        // setErrorImage(null);
       } else {
-        setErrorImage('Please select a valid image file.');
+        // setErrorImage('Please select a valid image file.');
         setImageFile(null);
       }
     }

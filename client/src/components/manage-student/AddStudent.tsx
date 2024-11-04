@@ -51,7 +51,7 @@ export default function AddStudent({ mutate }: { mutate: () => void }) {
   const [error, setError] = useState('' as string);
   const [selectedGender, setSelectedGender] = useState('' as string);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [errorImage, setErrorImage] = useState<string | null>(null);
+  // const [errorImage, setErrorImage] = useState<string | null>(null);
 
   const handleGender = (value: string) => {
     console.log(value);
@@ -65,9 +65,9 @@ export default function AddStudent({ mutate }: { mutate: () => void }) {
       if (selectedFile.type.startsWith('image/')) {
         setImageFile(selectedFile);
         setImage(URL.createObjectURL(selectedFile));
-        setErrorImage(null);
+        // setErrorImage(null);
       } else {
-        setErrorImage('Please select a valid image file.');
+        // setErrorImage('Please select a valid image file.');
         setImageFile(null);
       }
     }

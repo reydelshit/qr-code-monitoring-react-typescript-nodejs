@@ -9,7 +9,7 @@ import {
   ScrollText,
   UserCog,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const Root = () => {
@@ -124,7 +124,7 @@ const Root = () => {
               localStorage.removeItem('isLoggedIn_QR');
               localStorage.removeItem('role');
             }}
-            className="absolute right-8 top-5 z-10 cursor-pointer"
+            className="absolute right-8 top-8 z-10 cursor-pointer"
           >
             <Link to={'/scan'}>Switch to Scan Station</Link>
           </Button>
