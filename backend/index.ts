@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import path from 'path';
-import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
+import serverless from "serverless-http";
 import { studentRouter } from './api/studentRoute';
 import { attendanceRouter } from './api/attendanceRoute';
 import { messageRouter } from './api/messagesRoute';
@@ -89,4 +89,4 @@ app.use("/messages", messageRouter);
 app.use("/dashboard", dashboardRouter);
 
 
-export default app
+export const handler = serverless(app);
