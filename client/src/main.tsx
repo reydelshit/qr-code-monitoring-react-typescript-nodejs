@@ -11,6 +11,7 @@ import ViewStudentDetails from './components/manage-student/ViewStudentDetails';
 import Login from './pages/Login';
 import Message from './pages/Message';
 import Help from './pages/Help';
+import Archive from './pages/Archive';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,11 @@ const router = createBrowserRouter([
       {
         path: 'student-management/:id',
         element: <ViewStudentDetails />,
+      },
+
+      {
+        path: 'student-management/archive',
+        element: <Archive />,
       },
 
       {

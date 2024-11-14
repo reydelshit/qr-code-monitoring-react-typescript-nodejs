@@ -1,5 +1,4 @@
 import AddStudent from '@/components/manage-student/AddStudent';
-import EditStudent from '@/components/manage-student/EditStudent';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -26,14 +25,13 @@ import { Input } from '@/components/ui/input';
 import usePagination from '@/hooks/usePagination';
 import { Student } from '@/types/student';
 import axios from 'axios';
-import { UserRoundPen, UserRoundSearch, UserX } from 'lucide-react';
+import { ArchiveRestore, UserX } from 'lucide-react';
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
-const StudentManagement = () => {
-  const [studentID, setStudentID] = useState('');
+const Archive = () => {
   const { toast } = useToast();
   const [search, setSearch] = useState('');
 
@@ -70,7 +68,7 @@ const StudentManagement = () => {
       .delete(
         `${import.meta.env.VITE_SERVER_LINK}/student/delete/${student_id}`,
         {
-          data: { isArchive: true },
+          data: { isArchive: false },
         },
       )
       .then((res) => {
@@ -78,7 +76,7 @@ const StudentManagement = () => {
 
         if (res.data.status === 'success') {
           toast({
-            title: 'Student Deleted Successfully and Moved to Archive',
+            title: 'Student Deleted Successfully',
             description: 'The student has been deleted to the system.',
           });
           mutate();
@@ -93,13 +91,9 @@ const StudentManagement = () => {
       });
   };
 
-  const handleEdit = (student_id: string) => {
-    setStudentID(student_id);
-  };
-
   return (
     <div className="relative h-full w-full">
-      <h1 className="my-4 text-6xl font-bold">Manage Student</h1>
+      <h1 className="my-4 text-6xl font-bold">Archive</h1>
       <div className="mt-[2rem] h-full w-full">
         <div className="flex w-full justify-between p-2">
           <Input
@@ -137,14 +131,17 @@ const StudentManagement = () => {
 
         <div className="mx-2 mt-2 flex justify-between">
           <p className="text-sm">
-            Showing {currentItems.length} of {students.length} students.
+            Showing{' '}
+            {currentItems?.filter((stud) => stud.isArchive === 1).length} of{' '}
+            {students?.filter((stud) => stud.isArchive === 1).length} students.
           </p>
           <p className="text-sm">
-            {currentItems.length} number of students registed in the system.
+            {currentItems?.filter((stud) => stud.isArchive === 1).length} number
+            of students archived.
           </p>
         </div>
         <Table className="my-4 w-full">
-          <TableCaption>A list of registered students.</TableCaption>
+          <TableCaption>A list of archived students</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead></TableHead>
@@ -158,7 +155,7 @@ const StudentManagement = () => {
           </TableHeader>
           <TableBody>
             {currentItems
-              ?.filter((stud) => stud.isArchive === 0)
+              ?.filter((stud) => stud.isArchive === 1)
               .map((student, index) => {
                 return (
                   <TableRow key={index}>
@@ -197,37 +194,9 @@ const StudentManagement = () => {
                             className="flex gap-1"
                             to={`/student-management/${student.student_id}`}
                           >
-                            <UserRoundSearch size={20} /> View
+                            <ArchiveRestore size={20} /> Restore
                           </Link>
                         </Button>
-
-                        <Dialog>
-                          <DialogTrigger>
-                            {' '}
-                            <Button
-                              onClick={() => {
-                                handleEdit(student.student_id);
-                              }}
-                              className="flex gap-1"
-                            >
-                              <UserRoundPen size={20} /> Edit
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="h-[95%] w-[70%]">
-                            <DialogHeader>
-                              <div className="hidden">
-                                <DialogTitle>Edit student details</DialogTitle>
-                                <DialogDescription>
-                                  Fill in the form to edit student details
-                                </DialogDescription>
-                              </div>
-                            </DialogHeader>
-                            <EditStudent
-                              mutate={mutate}
-                              studentID={studentID}
-                            />
-                          </DialogContent>
-                        </Dialog>
 
                         <Button
                           onClick={() => {
@@ -235,7 +204,7 @@ const StudentManagement = () => {
                           }}
                           className="flex gap-1 bg-red-500 text-white"
                         >
-                          <UserX size={20} /> Delete
+                          <UserX size={20} /> Delete Permanently
                         </Button>
                       </div>
                     </TableCell>
@@ -269,4 +238,4 @@ const StudentManagement = () => {
   );
 };
 
-export default StudentManagement;
+export default Archive;

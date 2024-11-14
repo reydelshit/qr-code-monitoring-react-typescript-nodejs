@@ -15,6 +15,7 @@ interface Student {
   student_parent_email: string;
   student_address: string;
   student_gender: string;
+  isArchive: number;
 }
 
 export type { Student };

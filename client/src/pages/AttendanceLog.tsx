@@ -85,7 +85,7 @@ const AttendanceLog = () => {
           placeholder="Search student by ID Code"
         />
 
-        <div className="inline-flex gap-2">
+        <div className="mx-4 inline-flex gap-2">
           <Popover>
             <PopoverTrigger asChild>
               <Button

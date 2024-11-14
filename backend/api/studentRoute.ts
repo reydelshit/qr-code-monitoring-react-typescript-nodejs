@@ -172,8 +172,21 @@ const storage = multer.diskStorage({
   router.delete("/delete/:id", (req, res) => {
     const query = "DELETE FROM students WHERE student_id = ?"
     const id = req.params.id
-  
-    databaseConnection.query(query, id, (err, data) => {
+
+    const isArchive = req.body.isArchive;
+
+    if (isArchive) {
+     const queryUpdateArchive = "UPDATE students SET isArchive = 1 WHERE student_id = ?";
+      databaseConnection.query(queryUpdateArchive, id, (err, data) => { 
+        if(err) return res.json(err)
+        return res.json({
+          ...data,
+          message: "succesfully archived",
+          status: "success",
+        })})
+
+    } else {
+      databaseConnection.query(query, id, (err, data) => {
         if(err) return res.json(err)
         return res.json({
         ...data,
@@ -181,6 +194,9 @@ const storage = multer.diskStorage({
         status: "success",
       })
     })
+    }
+
+   
   })
   
   
