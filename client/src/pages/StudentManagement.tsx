@@ -170,7 +170,7 @@ const StudentManagement = () => {
                       <img
                         className="h-[4rem] w-[4rem] object-cover"
                         src={`${import.meta.env.VITE_SERVER_LINK}/${student.student_image_path}`}
-                        alt="student"
+                        alt="student_img"
                       />
                     </TableCell>
                     <TableCell className="mx-auto grid place-items-center text-center">
