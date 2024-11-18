@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import fs from 'fs';
 import multer from 'multer';
 import path from 'path';
@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // get all student
-router.get('/', (req, res) => {
+router.get('/', (req: Request, res: Response) => {
   const query = 'SELECT * FROM students';
 
   databaseConnection.query(query, (err, data) => {
@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
 });
 
 // specific student
-router.get('/:id', (req, res) => {
+router.get('/:id', (req: Request, res: Response) => {
   const query = 'SELECT * FROM students WHERE student_id = ?';
   const id = req.params.id;
   databaseConnection.query(query, id, (err, data) => {
