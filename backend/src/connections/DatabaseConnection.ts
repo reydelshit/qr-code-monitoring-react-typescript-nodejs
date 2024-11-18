@@ -1,16 +1,13 @@
-import mysql from 'mysql2';
-import fs from 'fs';
-import path from 'path';
 import dotenv from 'dotenv';
+import mysql from 'mysql2';
 
 dotenv.config();
 
 const databaseConnection: mysql.Connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'qr-code-monitoring',
-
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'qr-code-monitoring',
 
   //   host: process.env.DB_HOST,
   //   user: process.env.DB_USER,
@@ -20,15 +17,14 @@ const databaseConnection: mysql.Connection = mysql.createConnection({
 
   //   ssl: {
   //     ca: fs.readFileSync(path.join(__dirname, 'ca.pem')),
-  //     rejectUnauthorized: true,  
+  //     rejectUnauthorized: true,
   // }
-  });
-  
-  
-  databaseConnection.connect((err) => {
-   if(err) return console.log(err);
-  
-   return console.log('Database connected');
-  })
+});
 
-  export { databaseConnection };
+databaseConnection.connect((err) => {
+  if (err) return console.log(err);
+
+  return console.log('Database connected');
+});
+
+export { databaseConnection };

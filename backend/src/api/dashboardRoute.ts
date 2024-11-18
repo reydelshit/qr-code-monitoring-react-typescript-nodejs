@@ -1,17 +1,11 @@
-
-import express, { Express, NextFunction, Request, Response } from 'express';
-import path from 'path';
-import multer from 'multer';
 import { Router } from 'express';
 import { databaseConnection } from '../connections/DatabaseConnection';
 
 const router = Router();
 
-
-
-  //for graph
-  router.get("/", (req, res) => {
-    const query = `WITH RECURSIVE months(month_number) AS (
+//for graph
+router.get('/', (req, res) => {
+  const query = `WITH RECURSIVE months(month_number) AS (
   SELECT 1
   UNION ALL
   SELECT month_number + 1
@@ -65,21 +59,11 @@ LEFT JOIN
   monthly_totals ON months.month_number = monthly_totals.month_number
 ORDER BY
   months.month_number;`;
-  
-    databaseConnection.query(query, (err, data) => {
-        if (err) return res.json(err);
-        return res.json(data); 
-    });
+
+  databaseConnection.query(query, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
   });
+});
 
-  
-  
-  
-  
-
-  
-
-  export const dashboardRouter = router;
-  
-  
-  
+export const dashboardRouter = router;
