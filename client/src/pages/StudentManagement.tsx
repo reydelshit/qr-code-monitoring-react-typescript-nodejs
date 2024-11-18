@@ -39,9 +39,11 @@ const StudentManagement = () => {
 
   const fetcher = async (url: string): Promise<Student[]> => {
     const response = await fetch(url);
+
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+
     return response.json();
   };
 
@@ -51,6 +53,8 @@ const StudentManagement = () => {
     isLoading,
     mutate,
   } = useSWR(`${import.meta.env.VITE_SERVER_LINK}/student`, fetcher);
+
+  console.log(students);
 
   const filteredStudents = students.filter((student) => {
     return (
