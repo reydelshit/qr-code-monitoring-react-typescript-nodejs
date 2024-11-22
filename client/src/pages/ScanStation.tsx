@@ -224,7 +224,7 @@ const ScanStation = () => {
   return (
     <div className="relative h-dvh overflow-x-auto px-4">
       <div className="flex items-center justify-between">
-        <h1 className="my-4 text-6xl font-bold">Scan Statiosn</h1>
+        <h1 className="my-4 text-6xl font-bold">Scan Station</h1>
 
         {path === '/scan' && (
           <Button>

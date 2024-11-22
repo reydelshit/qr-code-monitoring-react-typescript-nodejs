@@ -11,20 +11,26 @@ const databaseConnection: mysql.Connection = mysql.createConnection({
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  port: parseInt(process.env.DB_PORT || '3306'),
 
-  ssl: {
-    ca: sslCaPath,
-    rejectUnauthorized: false,
-  },
+  // ssl: {
+  //   ca: sslCaPath,
+  //   rejectUnauthorized: false,
+  // },
 });
 
 databaseConnection.connect((err) => {
-  if (err) return console.log(err);
+  if (err) {
+    console.error('Connection Error:', err);
+    console.error('Host:', process.env.DB_HOST);
+    console.error('Port:', process.env.DB_PORT);
+    console.error('User:', process.env.DB_USER);
+    console.error('Database:', process.env.DB_NAME);
+    return;
+  }
 
   return console.log('Database connected');
 });
 
-console.log('SSL Certificate Path:', sslCaPath);
+// console.log('SSL Certificate Path:', sslCaPath);
 
 export { databaseConnection };

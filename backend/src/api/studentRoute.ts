@@ -154,7 +154,6 @@ router.put(`/update/:id`, upload.single('student_image_path'), (req, res) => {
 });
 
 // DELETE STUDENT
-
 router.delete('/delete/:id', (req, res) => {
   const query = 'DELETE FROM students WHERE student_id = ?';
   const id = req.params.id;
@@ -182,6 +181,22 @@ router.delete('/delete/:id', (req, res) => {
       });
     });
   }
+});
+
+//restore student
+
+router.put('/restore/:id', (req, res) => {
+  const query = 'UPDATE students SET isArchive = 0 WHERE student_id = ?';
+  const id = req.params.id;
+
+  databaseConnection.query(query, id, (err, data) => {
+    if (err) return res.json(err);
+    return res.json({
+      ...data,
+      message: 'succesfully restored',
+      status: 'success',
+    });
+  });
 });
 
 export const studentRouter = router;

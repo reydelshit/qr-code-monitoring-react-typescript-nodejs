@@ -91,6 +91,29 @@ const Archive = () => {
       });
   };
 
+  const handleRestore = (student_id: string) => {
+    axios
+      .put(`${import.meta.env.VITE_SERVER_LINK}/student/restore/${student_id}`)
+      .then((res) => {
+        console.log(res.data);
+
+        if (res.data.status === 'success') {
+          toast({
+            title: 'Student Restored Successfully',
+            description: 'The student has been restored to the system.',
+          });
+          mutate();
+        }
+      })
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'An error occurred while adding the student.',
+          variant: 'destructive',
+        });
+      });
+  };
+
   return (
     <div className="relative h-full w-full">
       <h1 className="my-4 text-6xl font-bold">Archive</h1>
@@ -189,13 +212,10 @@ const Archive = () => {
                     <TableCell>{student.student_gender}</TableCell>
                     <TableCell>
                       <div className="flex items-center justify-center gap-2">
-                        <Button className="">
-                          <Link
-                            className="flex gap-1"
-                            to={`/student-management/${student.student_id}`}
-                          >
-                            <ArchiveRestore size={20} /> Restore
-                          </Link>
+                        <Button
+                          onClick={() => handleRestore(student.student_id)}
+                        >
+                          <ArchiveRestore size={20} /> Restore
                         </Button>
 
                         <Button
