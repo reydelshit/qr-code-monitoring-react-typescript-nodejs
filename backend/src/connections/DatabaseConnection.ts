@@ -20,11 +20,6 @@ const databaseConnection: mysql.Connection = mysql.createConnection({
 
 databaseConnection.connect((err) => {
   if (err) {
-    console.error('Connection Error:', err);
-    console.error('Host:', process.env.DB_HOST);
-    console.error('Port:', process.env.DB_PORT);
-    console.error('User:', process.env.DB_USER);
-    console.error('Database:', process.env.DB_NAME);
     return;
   }
 

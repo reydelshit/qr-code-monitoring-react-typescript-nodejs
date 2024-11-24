@@ -32,6 +32,8 @@ import QRCode from 'react-qr-code';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
+import CryptoJS from 'crypto-js';
+
 const StudentManagement = () => {
   const [studentID, setStudentID] = useState('');
   const { toast } = useToast();
@@ -101,6 +103,15 @@ const StudentManagement = () => {
     setStudentID(student_id);
   };
 
+  const signData = (data: string) => {
+    const secretKey = import.meta.env.VITE_SIGNEDKEY;
+
+    const signature = CryptoJS.HmacSHA256(data, secretKey).toString(
+      CryptoJS.enc.Base64,
+    );
+
+    return JSON.stringify({ data, signature });
+  };
   return (
     <div className="relative h-full w-full">
       <h1 className="my-4 text-6xl font-bold">Manage Student</h1>
@@ -164,6 +175,8 @@ const StudentManagement = () => {
             {currentItems
               ?.filter((stud) => stud.isArchive === 0)
               .map((student, index) => {
+                const signedStudentID = signData(student.student_id_code);
+
                 return (
                   <TableRow key={index}>
                     <TableCell>
@@ -181,7 +194,7 @@ const StudentManagement = () => {
                           maxWidth: '100%',
                           width: '50%',
                         }}
-                        value={student.student_id_code}
+                        value={signedStudentID}
                         viewBox={`0 0 256 256`}
                       />
 

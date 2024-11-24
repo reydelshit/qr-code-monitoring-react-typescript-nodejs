@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import Message from './pages/Message';
 import Help from './pages/Help';
 import Archive from './pages/Archive';
+import Members from './pages/Members';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,11 @@ const router = createBrowserRouter([
       {
         path: 'ScanStation',
         element: <ScanStation />,
+      },
+
+      {
+        path: 'members',
+        element: <Members />,
       },
     ],
   },

@@ -105,7 +105,7 @@ const Dashboard = () => {
         {/* <p className="font-semibold">Welcome to the dashboard</p> */}
       </div>
 
-      <div className="pr-4">
+      <div className="mb-[9rem] pr-4">
         <div className="mt-[2rem] grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div className="flex h-[10rem] items-center justify-center gap-10 rounded-3xl border-[1px] shadow-md">
             <div>
@@ -143,28 +143,27 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="flex h-[450px] items-end gap-4">
-        <ChartContainer
-          config={chartConfig}
-          className="mt-[2rem] max-h-[500px] w-[60%]"
-        >
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <Bar
-              dataKey="total"
-              fill="#000000"
-              radius={4}
-              shape={<CustomBar />}
-            />
-          </BarChart>
-        </ChartContainer>
+        <div className="mt-[8rem] block w-[60%]">
+          <ChartContainer config={chartConfig} className="max-h-[500px] w-full">
+            <BarChart accessibilityLayer data={chartData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Bar
+                dataKey="total"
+                fill="#000000"
+                radius={4}
+                shape={<CustomBar />}
+              />
+            </BarChart>
+          </ChartContainer>
+        </div>
 
         <div className="flex h-full w-[40%] flex-col py-4">
           <h1 className="my-4 font-bold">TODAYS ENTRIES</h1>

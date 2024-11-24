@@ -19,6 +19,8 @@ import QRCode from 'react-qr-code';
 // import { URL } from 'url';
 import { DialogClose } from '@/components/ui/dialog';
 
+import CryptoJS from 'crypto-js';
+
 type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>;
@@ -164,6 +166,16 @@ export default function EditStudent({
     }
   };
 
+  const signData = (data: string) => {
+    const secretKey = import.meta.env.VITE_SIGNEDKEY;
+
+    const signature = CryptoJS.HmacSHA256(data, secretKey).toString(
+      CryptoJS.enc.Base64,
+    );
+
+    return JSON.stringify({ data, signature });
+  };
+
   return (
     <div className="flex w-full flex-col items-center gap-[1rem] p-2">
       <form className="w-full px-4 text-start" onSubmit={handleSubmitUpdate}>
@@ -195,7 +207,7 @@ export default function EditStudent({
                   maxWidth: '100%',
                   width: '100%',
                 }}
-                value={student.student_id_code || '0'}
+                value={signData(student.student_id_code)}
                 viewBox={`0 0 256 256`}
               />
             </div>

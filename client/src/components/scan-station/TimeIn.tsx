@@ -18,6 +18,8 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Link } from 'react-router-dom';
+import { toast } from '../ui/use-toast';
+import CryptoJS from 'crypto-js';
 
 interface TimeInType {
   studentID: string;
@@ -50,6 +52,17 @@ const TimeIn: React.FC<TimeInType> = ({
       data: filteredAttendance,
     });
 
+  const verifySignature = (data: string, signature: string) => {
+    const secretKey = import.meta.env.VITE_SIGNEDKEY;
+    // const secretKey = 'test';
+
+    const computedSignature = CryptoJS.HmacSHA256(data, secretKey).toString(
+      CryptoJS.enc.Base64,
+    );
+
+    return computedSignature === signature;
+  };
+
   return (
     <div className="flex h-full w-[100%] items-start justify-center gap-4">
       <div className="flex h-[500px] min-h-[30rem] flex-col gap-4 md:flex-row">
@@ -66,20 +79,53 @@ const TimeIn: React.FC<TimeInType> = ({
             <Scanner
               allowMultiple={false}
               onScan={(result: IDetectedBarcode[]) => {
+                // if (!result || result.length === 0) {
+                //   console.warn('No barcode detected.');
+                //   return;
+                // }
+
+                // const studentId = result[0].rawValue;
+                // console.log('Student ID:', studentId);
+
+                // try {
+                //   fetchStudentData(studentId, 'time-in');
+
+                //   // handleTimeIn(studentId);
+                // } catch (error) {
+                //   console.error('Error fetching student data:', error);
+                // }
+
                 if (!result || result.length === 0) {
                   console.warn('No barcode detected.');
                   return;
                 }
 
-                const studentId = result[0].rawValue;
-                console.log('Student ID:', studentId);
+                const scannedQR = result[0].rawValue;
+                console.log('Scanned QR Code:', scannedQR);
 
                 try {
-                  fetchStudentData(studentId, 'time-in');
+                  const parsedData = JSON.parse(scannedQR);
 
-                  // handleTimeIn(studentId);
+                  const { data, signature } = parsedData;
+
+                  const isValid = verifySignature(data, signature);
+
+                  if (!isValid) {
+                    toast({
+                      title: 'Invalid QR Code',
+                      description: 'The QR code signature is invalid.',
+                      variant: 'destructive',
+                    });
+                    return;
+                  }
+
+                  toast({
+                    title: 'QR Code Valid',
+                    description: 'QR code successfully scanned.',
+                  });
+                  fetchStudentData(data, 'time-in');
                 } catch (error) {
-                  console.error('Error fetching student data:', error);
+                  console.error('Error processing the QR code:', error);
                 }
               }}
             />
