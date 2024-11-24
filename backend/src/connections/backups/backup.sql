@@ -72,7 +72,7 @@ CREATE TABLE `messages` (
   `content` text NOT NULL,
   `dateSent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`message_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data for table `messages`
 INSERT INTO `messages` VALUES ('1', '202020', '', 'Good day, Benidikto. Your student, Gottfried Leibniz, has ENTERED the school on Thursday, September 5, 2024 2:05 PM.', 'Thursday, September 5, 2024 2:05 PM');
@@ -106,6 +106,7 @@ INSERT INTO `messages` VALUES ('28', 'Lakers23', '231321', 'Good day, Reydel. Yo
 INSERT INTO `messages` VALUES ('29', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has ENTERED the school on Monday, November 25, 2024 2:33 AM.', 'Monday, November 25, 2024 2:33 AM');
 INSERT INTO `messages` VALUES ('30', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has ENTERED the school on Monday, November 25, 2024 2:40 AM.', 'Monday, November 25, 2024 2:40 AM');
 INSERT INTO `messages` VALUES ('31', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has ENTERED the school on Monday, November 25, 2024 2:40 AM.', 'Monday, November 25, 2024 2:40 AM');
+INSERT INTO `messages` VALUES ('32', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has EXITED the school on Monday, November 25, 2024 2:41 AM.', 'Monday, November 25, 2024 2:41 AM');
 
 -- Schema for table `students`
 CREATE TABLE `students` (
@@ -127,7 +128,7 @@ CREATE TABLE `students` (
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data for table `students`
-INSERT INTO `students` VALUES ('9', 'Lakers23', 'uploads\1724988704995.png', 'Lebron James Cabonegro', '2024-08-29', 'Glamang Pol So cot', 'Male', 'Reydel', 'Reydel', 'Reydel', 'Reydel', '231321', 'reydel321@gmail.com', '0');
+INSERT INTO `students` VALUES ('9', 'Lakers23', 'uploads\1724988704995.png', 'Lebron James Cabonegro', '2024-08-29', 'Glamang Pol So cot', 'Male', 'Reydel', 'Reydel', 'Reydel', 'Reydel', '231321', 'reydel321@gmail.com', '1');
 INSERT INTO `students` VALUES ('17', '202020', 'uploads\1725001363343.jpg', 'Gottfried Leibniz', '2024-08-29', 'Erfundene Straße 33', 'Female', '2nd', 'BSIT', '1', 'Benidikto', '2147483647', 'test@beispiel.de', '0');
 INSERT INTO `students` VALUES ('24', 'Lakers23', 'uploads\1725591404295.png', 'Juan Francisco García Flores', '2024-09-25', 'C. Falsa 445', 'Male', '2nd', 'BSIT', '1', 'Benidikto', '2147483647', 'ejemplo@ejemplo.mx', '0');
 

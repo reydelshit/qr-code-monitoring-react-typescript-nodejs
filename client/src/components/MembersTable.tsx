@@ -58,8 +58,7 @@ export function MembersTable() {
 
   return (
     <div className="w-full space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">ADD MEMBER</h1>
+      <div className="flex items-center justify-end">
         <Button onClick={() => setOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Add Member

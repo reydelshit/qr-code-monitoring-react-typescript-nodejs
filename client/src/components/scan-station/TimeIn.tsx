@@ -107,13 +107,13 @@ const TimeIn: React.FC<TimeInType> = ({
                   const parsedData = JSON.parse(scannedQR);
 
                   const { data, signature } = parsedData;
-
                   const isValid = verifySignature(data, signature);
 
                   if (!isValid) {
                     toast({
                       title: 'Invalid QR Code',
-                      description: 'The QR code signature is invalid.',
+                      description:
+                        'The QR code signature is invalid or tampered.',
                       variant: 'destructive',
                     });
                     return;

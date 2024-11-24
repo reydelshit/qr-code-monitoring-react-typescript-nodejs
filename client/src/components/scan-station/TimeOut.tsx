@@ -1,4 +1,4 @@
-import React from 'react';
+import ProfileDefault from '@/assets/profile.webp';
 import {
   Table,
   TableBody,
@@ -8,21 +8,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import usePagination from '@/hooks/usePagination';
+import { Attendance, IDetectedBarcode, Student } from '@/types/scan-station';
 import { Scanner } from '@yudiel/react-qr-scanner';
-import { Label } from '../ui/label';
+import CryptoJS from 'crypto-js';
+import { ChartNoAxesGantt, CircleHelp, QrCode } from 'lucide-react';
+import moment from 'moment';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import PaginationTemplate from '../Pagination';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import moment from 'moment';
-import ProfileDefault from '@/assets/profile.webp';
-import { IDetectedBarcode } from '@/types/scan-station';
-import { Attendance } from '@/types/scan-station';
-import { Student } from '@/types/scan-station';
-import usePagination from '@/hooks/usePagination';
-import { ChartNoAxesGantt, CircleHelp, QrCode } from 'lucide-react';
-import PaginationTemplate from '../Pagination';
-import { Link } from 'react-router-dom';
+import { Label } from '../ui/label';
 import { toast } from '../ui/use-toast';
-import CryptoJS from 'crypto-js';
 
 interface TimeOutType {
   studentID: string;
@@ -99,7 +97,8 @@ const TimeOut: React.FC<TimeOutType> = ({
                     if (!isValid) {
                       toast({
                         title: 'Invalid QR Code',
-                        description: 'The QR code signature is invalid.',
+                        description:
+                          'The QR code signature is invalid or tampered.',
                         variant: 'destructive',
                       });
                       return;
