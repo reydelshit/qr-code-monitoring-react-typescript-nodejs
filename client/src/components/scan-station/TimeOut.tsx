@@ -21,6 +21,8 @@ import usePagination from '@/hooks/usePagination';
 import { ChartNoAxesGantt, CircleHelp, QrCode } from 'lucide-react';
 import PaginationTemplate from '../Pagination';
 import { Link } from 'react-router-dom';
+import { toast } from '../ui/use-toast';
+import CryptoJS from 'crypto-js';
 
 interface TimeOutType {
   studentID: string;
@@ -52,6 +54,17 @@ const TimeOut: React.FC<TimeOutType> = ({
       data: filteredAttendance,
     });
 
+  const verifySignature = (data: string, signature: string) => {
+    const secretKey = import.meta.env.VITE_SIGNEDKEY;
+    // const secretKey = 'test';
+
+    const computedSignature = CryptoJS.HmacSHA256(data, secretKey).toString(
+      CryptoJS.enc.Base64,
+    );
+
+    return computedSignature === signature;
+  };
+
   return (
     <>
       <div className="flex h-full w-[100%] items-start justify-center gap-4">
@@ -71,8 +84,37 @@ const TimeOut: React.FC<TimeOutType> = ({
                 onScan={(result: IDetectedBarcode[]) => {
                   console.log('Student ID:', result[0].rawValue);
 
-                  fetchStudentData(result[0].rawValue, 'time-out');
-                  fetchAttendanceForTimeout(result[0].rawValue);
+                  // fetchStudentData(result[0].rawValue, 'time-out');
+
+                  const scannedQR = result[0].rawValue;
+                  console.log('Scanned QR Code:', scannedQR);
+
+                  try {
+                    const parsedData = JSON.parse(scannedQR);
+
+                    const { data, signature } = parsedData;
+
+                    const isValid = verifySignature(data, signature);
+
+                    if (!isValid) {
+                      toast({
+                        title: 'Invalid QR Code',
+                        description: 'The QR code signature is invalid.',
+                        variant: 'destructive',
+                      });
+                      return;
+                    }
+
+                    toast({
+                      title: 'QR Code Valid',
+                      description: 'QR code successfully scanned.',
+                    });
+                    fetchStudentData(data, 'time-out');
+                  } catch (error) {
+                    console.error('Error processing the QR code:', error);
+                  }
+
+                  // fetchAttendanceForTimeout(result[0].rawValue);
                 }}
               />
             </div>

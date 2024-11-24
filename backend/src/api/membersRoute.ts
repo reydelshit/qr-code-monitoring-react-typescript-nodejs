@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { databaseConnection } from '../connections/DatabaseConnection';
+import { deleteRow } from '../connections/deleteBackup';
 // import { backupDatabase } from '../connections/backupDB';
 
 const router = Router();
@@ -132,22 +133,25 @@ router.put('/update/:id', (req: Request<{ id: string }>, res: Response) => {
 });
 
 // Delete a member
-router.delete('/delete/:id', (req: Request<{ id: string }>, res: Response) => {
-  const query = 'DELETE FROM members WHERE member_id = ?';
-  const id = parseInt(req.params.id);
+router.delete(
+  '/delete/:id',
+  async (req: Request<{ id: string }>, res: Response) => {
+    const query = 'DELETE FROM members WHERE member_id = ?';
+    const id = parseInt(req.params.id);
 
-  databaseConnection.query(query, [id], (err, data: ResultSetHeader) => {
-    if (err) return res.status(500).json({ error: err.message });
+    databaseConnection.query(query, [id], (err, data: ResultSetHeader) => {
+      if (err) return res.status(500).json({ error: err.message });
 
-    if (data.affectedRows === 0) {
-      return res.status(404).json({ message: 'Member not found' });
-    }
+      if (data.affectedRows === 0) {
+        return res.status(404).json({ message: 'Member not found' });
+      }
 
-    return res.json({
-      message: 'Successfully deleted member',
-      status: 'success',
+      return res.json({
+        message: 'Successfully deleted member',
+        status: 'success',
+      });
     });
-  });
-});
+  },
+);
 
 export const membersRouter = router;

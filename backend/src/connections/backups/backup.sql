@@ -6,7 +6,7 @@ CREATE TABLE `attendance` (
   `timeOut` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`attendance_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=114 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data for table `attendance`
 INSERT INTO `attendance` VALUES ('101', '202020', '2024-10-02 00:26:47', '2024-10-02 00:28:14', 'Wed Oct 02 2024 00:26:47 GMT+0800 (Singapore Standard Time)');
@@ -36,6 +36,18 @@ INSERT INTO `attendance` VALUES ('110', '202020', '2024-11-22 12:41:12', '2024-1
 INSERT INTO `attendance` VALUES ('111', 'Lakers23', '2024-11-22 14:10:30', '2024-11-22 14:10:42', 'Fri Nov 22 2024 14:10:30 GMT+0800 (Singapore Standard Time)');
 INSERT INTO `attendance` VALUES ('112', 'Lakers23', '2024-11-22 14:10:56', 'n/a', 'Fri Nov 22 2024 14:10:56 GMT+0800 (Singapore Standard Time)');
 INSERT INTO `attendance` VALUES ('113', 'Lakers23', '2024-11-25 01:10:59', 'n/a', 'Mon Nov 25 2024 01:10:59 GMT+0800 (Singapore Standard Time)');
+INSERT INTO `attendance` VALUES ('114', 'Lakers23', '2024-11-25 02:33:47', 'n/a', 'Mon Nov 25 2024 02:33:47 GMT+0800 (Singapore Standard Time)');
+INSERT INTO `attendance` VALUES ('115', 'Lakers23', '2024-11-25 02:40:06', 'n/a', 'Mon Nov 25 2024 02:40:06 GMT+0800 (Singapore Standard Time)');
+INSERT INTO `attendance` VALUES ('116', 'Lakers23', '2024-11-25 02:40:57', '2024-11-25 02:41:03', 'Mon Nov 25 2024 02:40:57 GMT+0800 (Singapore Standard Time)');
+
+-- Schema for table `deleted_records`
+CREATE TABLE `deleted_records` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `table_name` varchar(255) NOT NULL,
+  `deleted_data` json NOT NULL,
+  `deleted_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Schema for table `members`
 CREATE TABLE `members` (
@@ -47,11 +59,10 @@ CREATE TABLE `members` (
   `permissions` text NOT NULL,
   `created_at` date NOT NULL,
   PRIMARY KEY (`member_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data for table `members`
-INSERT INTO `members` VALUES ('6', 'Jon A. Jones', 'jonajones', 'ajcjgb9e', '8h', '["view-attendance"]', 'Mon Nov 25 2024 00:00:00 GMT+0800 (Singapore Standard Time)');
-INSERT INTO `members` VALUES ('7', 'Reydel', 'reydel', '5bim6px9', '8h', '["manage-student"]', 'Mon Nov 25 2024 00:00:00 GMT+0800 (Singapore Standard Time)');
+INSERT INTO `members` VALUES ('14', 'dasd', 'dasd', '7qgfu8jp', '24h', '["scan-qr-code","manage-student"]', 'Mon Nov 25 2024 00:00:00 GMT+0800 (Singapore Standard Time)');
 
 -- Schema for table `messages`
 CREATE TABLE `messages` (
@@ -61,7 +72,7 @@ CREATE TABLE `messages` (
   `content` text NOT NULL,
   `dateSent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`message_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data for table `messages`
 INSERT INTO `messages` VALUES ('1', '202020', '', 'Good day, Benidikto. Your student, Gottfried Leibniz, has ENTERED the school on Thursday, September 5, 2024 2:05 PM.', 'Thursday, September 5, 2024 2:05 PM');
@@ -92,6 +103,9 @@ INSERT INTO `messages` VALUES ('25', 'Lakers23', '231321', 'Good day, Reydel. Yo
 INSERT INTO `messages` VALUES ('26', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has EXITED the school on Friday, November 22, 2024 2:10 PM.', 'Friday, November 22, 2024 2:10 PM');
 INSERT INTO `messages` VALUES ('27', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has ENTERED the school on Friday, November 22, 2024 2:10 PM.', 'Friday, November 22, 2024 2:10 PM');
 INSERT INTO `messages` VALUES ('28', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has ENTERED the school on Monday, November 25, 2024 1:10 AM.', 'Monday, November 25, 2024 1:10 AM');
+INSERT INTO `messages` VALUES ('29', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has ENTERED the school on Monday, November 25, 2024 2:33 AM.', 'Monday, November 25, 2024 2:33 AM');
+INSERT INTO `messages` VALUES ('30', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has ENTERED the school on Monday, November 25, 2024 2:40 AM.', 'Monday, November 25, 2024 2:40 AM');
+INSERT INTO `messages` VALUES ('31', 'Lakers23', '231321', 'Good day, Reydel. Your student, Lebron James Cabonegro, has ENTERED the school on Monday, November 25, 2024 2:40 AM.', 'Monday, November 25, 2024 2:40 AM');
 
 -- Schema for table `students`
 CREATE TABLE `students` (

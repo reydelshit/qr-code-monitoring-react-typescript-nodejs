@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import routes from './routes';
 import { backupDatabase } from './connections/backupDB';
+import { backupDeletedData } from './connections/deleteBackup';
 
 const app: Application = express();
 const PORT = parseInt(process.env.PORT as string, 10) || 3000;

@@ -60,7 +60,7 @@ const backupDatabase = async () => {
             .map((value) => (value === null ? 'NULL' : `'${value}'`))
             .join(', ');
 
-          console.log(`Inserting row into backup: ${values}`);
+          // console.log(`Inserting row into backup: ${values}`);
 
           backupData += `INSERT INTO \`${table}\` VALUES (${values});\n`;
         }
