@@ -27,7 +27,10 @@ const ViewStudentDetails = () => {
 
   return (
     <div className="h-full w-full">
-      <h1 className="my-4 text-6xl font-bold">Student Details</h1>
+      <div className="my-10">
+        <h1 className="text-6xl font-bold">Student Details</h1>
+        {/* <p className="font-semibold">Welcome to the dashboard</p> */}
+      </div>
 
       <div className="my-4">
         <div className="flex justify-start gap-8">
