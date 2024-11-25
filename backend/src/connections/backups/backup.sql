@@ -62,7 +62,7 @@ CREATE TABLE `members` (
 ) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data for table `members`
-INSERT INTO `members` VALUES ('14', 'dasd', 'dasd', '7qgfu8jp', '24h', '["scan-qr-code","manage-student"]', 'Mon Nov 25 2024 00:00:00 GMT+0800 (Singapore Standard Time)');
+INSERT INTO `members` VALUES ('14', 'dasd', 'dasd', 'reydel', '24h', '["scan-qr-code","manage-student"]', 'Mon Nov 25 2024 00:00:00 GMT+0800 (Singapore Standard Time)');
 
 -- Schema for table `messages`
 CREATE TABLE `messages` (
@@ -128,7 +128,7 @@ CREATE TABLE `students` (
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data for table `students`
-INSERT INTO `students` VALUES ('9', 'Lakers23', 'uploads\1724988704995.png', 'Lebron James Cabonegro', '2024-08-29', 'Glamang Pol So cot', 'Male', 'Reydel', 'Reydel', 'Reydel', 'Reydel', '231321', 'reydel321@gmail.com', '1');
+INSERT INTO `students` VALUES ('9', 'Lakers23', 'uploads\1724988704995.png', 'Lebron James Cabonegro', '2024-08-29', 'Glamang Pol So cot', 'Male', 'Reydel', 'Reydel', 'Reydel', 'Reydel', '231321', 'reydel321@gmail.com', '0');
 INSERT INTO `students` VALUES ('17', '202020', 'uploads\1725001363343.jpg', 'Gottfried Leibniz', '2024-08-29', 'Erfundene Straße 33', 'Female', '2nd', 'BSIT', '1', 'Benidikto', '2147483647', 'test@beispiel.de', '0');
 INSERT INTO `students` VALUES ('24', 'Lakers23', 'uploads\1725591404295.png', 'Juan Francisco García Flores', '2024-09-25', 'C. Falsa 445', 'Male', '2nd', 'BSIT', '1', 'Benidikto', '2147483647', 'ejemplo@ejemplo.mx', '0');
 

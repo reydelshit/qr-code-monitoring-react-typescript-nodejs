@@ -11,7 +11,7 @@ import {
   UserCog,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 interface MemberItem {
   member_id?: number;
@@ -23,12 +23,47 @@ interface MemberItem {
   created_at?: Date;
 }
 
+const permissions = [
+  {
+    id: 'view-attendance',
+    label: 'Attendance',
+    path: '/attendance-log',
+    icon: ScrollText,
+  },
+  {
+    id: 'manage-student',
+    label: 'Students',
+    path: '/student-management',
+    icon: UserCog,
+  },
+  {
+    id: 'view-reports',
+    label: 'Reports',
+    path: '/Reports',
+    icon: ChartBarBig,
+  },
+  {
+    id: 'scan-qr-code',
+    label: 'Scan Station',
+    path: '/ScanStation',
+    icon: QrCode,
+  },
+
+  {
+    id: 'manage-members',
+    label: 'Manage Members',
+    path: '/members',
+    icon: Network,
+  },
+];
+
 const Root = () => {
   const params = useLocation();
   const userRole = localStorage.getItem('role');
   const userDetails: MemberItem = JSON.parse(
     localStorage.getItem('user') || '{}',
   );
+  const navigate = useNavigate();
 
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
 
@@ -99,39 +134,17 @@ const Root = () => {
       }
     }
   }, []);
-  const permissions = [
-    {
-      id: 'view-attendance',
-      label: 'Attendance',
-      path: '/attendance-log',
-      icon: ScrollText,
-    },
-    {
-      id: 'manage-student',
-      label: 'Students',
-      path: '/student-management',
-      icon: UserCog,
-    },
-    {
-      id: 'view-reports',
-      label: 'Reports',
-      path: '/Reports',
-      icon: ChartBarBig,
-    },
-    {
-      id: 'scan-qr-code',
-      label: 'Scan Station',
-      path: '/ScanStation',
-      icon: QrCode,
-    },
 
-    {
-      id: 'manage-members',
-      label: 'Manage Members',
-      path: '/members',
-      icon: Network,
-    },
-  ];
+  useEffect(() => {
+    const hasPermission = permissions.some(
+      (permission) =>
+        userRole === 'admin' || userPermissions.includes(permission.id),
+    );
+
+    if (!hasPermission) {
+      navigate('/'); // Redirect to the dashboard
+    }
+  }, [userPermissions, userRole, permissions, navigate]);
 
   return (
     <div className="flex h-full w-full items-center justify-center">
